@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextWidget(
-                'Dr. Abu Sayed Md. Mostafizur...',
+                'ABC XYZ',
                 style: TextStyles.title16,
               ),
               TextWidget(
@@ -106,32 +106,34 @@ class _HomeScreenState extends State<HomeScreen> {
       child: GridView.builder(
           gridDelegate:
           const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            mainAxisSpacing: 2,
-            crossAxisSpacing: 2,
-            childAspectRatio: 1.1,
+            crossAxisCount: 2,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: 1.5,
           ),
           physics: const BouncingScrollPhysics(),
           itemCount: 5,
           itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: InkWell(
-                onTap: (){
-                  Get.toNamed(AppRoutes.studentInfoScreen);
-                },
-                child: Container(
-                  height: size.width / 3,
-                  width: size.width / 3,
-                  padding: const EdgeInsets.all(10),
-                  margin: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: strokeColor,
-                    border: Border.all(),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  alignment: Alignment.center,
-                  child: TextWidget('Room-50$index', style: TextStyles.regular12,),
+            return InkWell(
+              onTap: (){
+                Get.toNamed(AppRoutes.studentInfoScreen);
+              },
+              child: Container(
+                height: size.width / 3,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: strokeColor,
+                  border: Border.all(),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextWidget('Building ${index + 1} ', style: TextStyles.regular12,),
+                    TextWidget('Room-50${index + 1}', style: TextStyles.regular12,),
+                    TextWidget('Total Student-3$index', style: TextStyles.regular12,),
+                  ],
                 ),
               ),
             );

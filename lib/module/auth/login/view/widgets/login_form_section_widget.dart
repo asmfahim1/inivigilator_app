@@ -27,7 +27,7 @@ class _LoginFormSectionWidgetState extends State<LoginFormSectionWidget> {
     return Form(
       key: _formKey,
       child: Container(
-        height: size.height / 1.9,
+        height: size.height / 2,
         width: size.width,
         padding: EdgeInsets.symmetric(horizontal: 5),
         decoration: BoxDecoration(
@@ -36,6 +36,7 @@ class _LoginFormSectionWidgetState extends State<LoginFormSectionWidget> {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBoxHeight20(),
             _textFields(),
