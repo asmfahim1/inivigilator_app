@@ -1,118 +1,104 @@
-// import 'dart:convert';
-// import 'dart:developer';
-// import 'dart:io';
-// import 'package:http/http.dart' as http;
-//
-// class ApiClient {
-//   http.Client? httClient;
-//
-//   ApiClient({this.httClient}) {
-//     httClient ??= http.Client();
-//   }
-//
-//   Future<http.Response> getRequest(String url) async {
-//     final completeUrl = _buildUrl(url);
-//     log('Checking for Get API start & end point $completeUrl');
-//     final headers = await _getHeaders();
-//     return httClient!.get(Uri.parse(completeUrl), headers: headers);
-//   }
-//
-//   Future<http.Response> postRequest(
-//       String url,
-//       Map<String, dynamic> body, {
-//         Duration? timeout,
-//         bool checkAccessValidity = true,
-//       }) async {
-//     final completeUrl = _buildUrl(url);
-//     log('Checking for Post API start & end point $completeUrl');
-//     final headers = await _getHeaders();
-//     final encodedBody = json.encode(body);
-//     return httClient!
-//         .post(Uri.parse(completeUrl), headers: headers, body: encodedBody);
-//   }
-//
-//   Future<http.Response> putRequest(
-//       String url,
-//       Map<String, dynamic> body, {
-//         Duration? timeout,
-//       }) async {
-//     final completeUrl = _buildUrl(url);
-//     log('Checking for Put API start & end point $completeUrl');
-//     final headers = await _getHeaders();
-//     final encodedBody = json.encode(body);
-//     return httClient!
-//         .put(Uri.parse(completeUrl), headers: headers, body: encodedBody);
-//   }
-//
-//   Future<Map<String, String>> _getHeaders() async {
-//     final accessToken = await AccessTokenProvider().getToken();
-//     final headers = <String, String>{
-//       'Accept': 'application/json',
-//       'Content-Type': 'application/json',
-//     };
-//     if (accessToken!.isNotEmpty) {
-//       headers.addAll({HttpHeaders.authorizationHeader: 'Bearer $accessToken'});
-//     }
-//     return headers;
-//   }
-//
-//   Future<http.StreamedResponse> multiPartRequest(
-//       String url,
-//       Map<String, String> body, {
-//         Duration? timeout,
-//         bool checkAccessValidity = true,
-//       }) async {
-//     final completeUrl = _buildUrl(url);
-//
-//     final request = http.MultipartRequest(
-//       'POST',
-//       Uri.parse(completeUrl),
-//     );
-//
-//     final accessToken = await AccessTokenProvider().getToken();
-//
-//     final headers = {
-//       'Authorization': 'Bearer $accessToken',
-//     };
-//     if (accessToken!.isNotEmpty) {
-//       request.headers.addAll(headers);
-//     }
-//     request.fields.addAll(body);
-//     final response = await request.send();
-//     return response;
-//   }
-//
-//   Future<http.StreamedResponse> multiPartRequestWithFile(
-//       String url,
-//       Map<String, String> body,
-//       String? filepath,
-//       String? fileKeyName, {
-//         bool hasFile = true,
-//       }) async {
-//     final headers = await _getHeaders();
-//     final completeUrl = _buildUrl(url);
-//
-//     final request = http.MultipartRequest(
-//       'POST',
-//       Uri.parse(completeUrl),
-//     );
-//     request.fields.addAll(body);
-//     if (hasFile) {
-//       request.files.add(
-//         await http.MultipartFile.fromPath(
-//           fileKeyName!,
-//           filepath!,
-//         ),
-//       );
-//     }
-//     log('Checking for Post API start & end point ${json.encode(body)}');
-//     request.headers.addAll(headers);
-//     final response = await request.send();
-//     return response;
-//   }
-//
-//   String _buildUrl(String partialUrl) {
-//     final baseUrl = Urls.baseUrl;
-//     return baseUrl + partialUrl;
-//   }
-// }
+import 'dart:convert';
+import 'dart:io';
+import 'package:get/get.dart';
+import 'package:dio/dio.dart' as dio;
+import 'package:invigilator_app/core/utils/const_key.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class ApiClient extends GetConnect implements GetxService {
+  late String token;
+  final String appBaseUrl;
+  late SharedPreferences sharedPreferences;
+  late Map<String, String> _mainHeaders;
+
+  ApiClient({required this.appBaseUrl, required this.sharedPreferences}) {
+    baseUrl = appBaseUrl;
+
+    timeout = const Duration(seconds: 30);
+    token = sharedPreferences.getString(AppConstantKey.TOKEN.key) ?? '';
+    _mainHeaders = {
+      'Context-type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
+    };
+  }
+
+  void updateHeader(String token) {
+    _mainHeaders = {
+      'Context-type': 'application/json; charset=UTF-8',
+      'Authorization': 'Bearer $token',
+    };
+  }
+
+  Future<Response> getData(String uri, {Map<String, String>? headers}) async {
+    try {
+      Response response =
+          await get(Uri.encodeFull(uri), headers: headers ?? _mainHeaders);
+      return response;
+    } catch (e) {
+      return Response(statusCode: 1, statusText: e.toString());
+    }
+  }
+
+  Future<Response> postData(String uri, dynamic body) async {
+    try {
+      Response response =
+          await post(uri, jsonEncode(body), headers: _mainHeaders);
+
+      return response;
+    } catch (e) {
+      return Response(statusCode: 1, statusText: e.toString());
+    }
+  }
+
+  Future<Response> putData(String uri, dynamic body) async {
+    try {
+      Response response =
+          await put(uri, jsonEncode(body), headers: _mainHeaders);
+      return response;
+    } catch (e) {
+      return Response(statusCode: 1, statusText: e.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>> uploadFileWithDio(
+      String uri, File file, String fileName) async {
+    Map<String, dynamic> map = {};
+    try {
+
+      String completeUrl = '$baseUrl$uri';
+
+      final request = dio.Dio();
+      final formData = dio.FormData.fromMap({
+        "image": await dio.MultipartFile.fromFile(
+          file.path,
+          filename: fileName,
+          //contentType: MediaType('application', 'pdf'),
+        ),
+      });
+
+      final response = await request.postUri(
+        Uri.parse(
+          completeUrl,
+        ),
+        data: formData,
+        options: dio.Options(
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            HttpHeaders.contentTypeHeader: 'multipart/form-data; charset=UTF-8',
+            HttpHeaders.contentLengthHeader: formData.length,
+          },
+        ),
+      );
+      map = response.data;
+
+      return map;
+    } on dio.DioException catch (error) {
+
+      throw 'Something Went Wrong';
+
+    } catch (error) {
+
+      throw 'Something Went Wrong';
+    }
+  }
+}

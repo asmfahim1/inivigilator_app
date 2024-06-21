@@ -7,14 +7,14 @@ import 'back_button.dart';
 class CommonAppbar extends StatelessWidget implements PreferredSizeWidget {
   const CommonAppbar({
     Key? key,
+    this.autoImply = true,
     this.centerTitle = true,
-    this.leading = const BackButtonWidget(),
     this.title,
     this.flexibleSpace = const SizedBox(),
     this.actions = const [SizedBox()],
   }) : super(key: key);
 
-  final Widget leading;
+  final bool? autoImply;
   final String? title;
   final Widget flexibleSpace;
   final bool centerTitle;
@@ -37,7 +37,7 @@ class CommonAppbar extends StatelessWidget implements PreferredSizeWidget {
               ),
         flexibleSpace: flexibleSpace,
         elevation: 0,
-        leading: leading,
+        automaticallyImplyLeading: autoImply!,
         actions: actions,
       ),
     );

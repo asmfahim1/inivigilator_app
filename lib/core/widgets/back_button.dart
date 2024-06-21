@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../utils/colors.dart';
 import 'common_icon_widget.dart';
 
@@ -9,7 +10,7 @@ class BackButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        Navigator.pop(context);
+        Get.back();
       },
       child: const SizedBox(
         height: 56,

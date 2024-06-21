@@ -2,30 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:google_fonts/google_fonts.dart';
-//localization
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
+import 'package:invigilator_app/core/utils/dimensions.dart';
+import 'package:invigilator_app/l10n/getx_localization.dart';
 import 'core/utils/app_routes.dart';
 import 'core/utils/app_version.dart';
+import 'core/utils/dependencies.dart' as dep;
 import 'core/utils/colors.dart';
 import 'core/utils/pref_helper.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initServices();
-  await SystemChrome.setPreferredOrientations(
-    [
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ],
-  );
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+  await dep.init();
+  initializeGet();
   runApp(const MyApp());
 }
 
-/// Make sure you always init shared pref first. It has token and token is need
-/// to make API call
-initServices() async {
+Future<void> initializeGet() async {
+  await Get.putAsync(() async {
+    return Dimensions(); // Initialize Dimensions class
+  });
   await PrefHelper.init();
   await AppVersion.getVersion();
 }
@@ -37,11 +37,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     return GetMaterialApp(
-      title: 'invigilator app',
+      title: 'Invigilator app',
       debugShowCheckedModeBanner: false,
       //localization
-      supportedLocales: AppLocalizations.supportedLocales,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      translations: Language(),
       locale: (PrefHelper.getLanguage() == 1)
           ? const Locale('en', 'US')
           : const Locale('bn', 'BD'),

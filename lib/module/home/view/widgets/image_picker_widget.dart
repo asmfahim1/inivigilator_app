@@ -1,9 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-
-import '../../../../core/utils/asset_path.dart';
 import '../../../../core/utils/colors.dart';
-import '../../../../core/widgets/common_icon_widget.dart';
 
 class ImagePickerWidget extends StatelessWidget {
   final File? imageFile;

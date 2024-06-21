@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:invigilator_app/core/utils/app_routes.dart';
+import 'package:invigilator_app/core/utils/string_resource.dart';
 import '../../../core/utils/colors.dart';
 import '../../../core/utils/styles.dart';
 import '../../../core/widgets/common_appbar.dart';
@@ -15,14 +16,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final HomeController home = Get.put(HomeController());
+  final home = Get.find<HomeController>();
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppbar(
-        title: 'Home',
+        autoImply: false,
+        title: 'dashboard'.tr,
         actions: [
           GestureDetector(
             onTap: () {
@@ -102,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _examRooms(){
     Size size = MediaQuery.of(context).size;
     return Padding(
-      padding: EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(10.0),
       child: GridView.builder(
           gridDelegate:
           const SliverGridDelegateWithFixedCrossAxisCount(

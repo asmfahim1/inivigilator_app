@@ -1,6 +1,5 @@
+import 'package:invigilator_app/core/utils/const_key.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../constant/constant_key.dart';
 
 class PrefHelper {
 
@@ -59,16 +58,16 @@ class PrefHelper {
   }
 
   static getLanguage() {
-    return _prefsInstance?.getInt(AppConstant.LANGUAGE.key) ?? 1;
+    return _prefsInstance?.getInt(AppConstantKey.LANGUAGE.key) ?? 1;
   }
 
   static void logout() {
     final languageValue = getLanguage();
     _prefsInstance?.clear();
-    _prefsInstance?.setInt(AppConstant.LANGUAGE.key, languageValue);
+    _prefsInstance?.setInt(AppConstantKey.LANGUAGE.key, languageValue);
   }
 
   static bool isLoggedIn() {
-    return (_prefsInstance?.getInt(AppConstant.USER_ID.key) ?? -1) > 0;
+    return (_prefsInstance?.getInt(AppConstantKey.USER_ID.key) ?? -1) > 0;
   }
 }

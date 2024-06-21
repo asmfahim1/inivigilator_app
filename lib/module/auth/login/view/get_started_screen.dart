@@ -49,12 +49,12 @@ class GetStartedScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     TextWidget(
-                      'Welcome to our platform',
+                      'welcome_text_title'.tr,
                       style: TextStyles.title20.copyWith(color: whiteColor),
                     ),
                     const SizedBoxHeight20(),
                     TextWidget(
-                      'Face detection applications use AI algorithms, ML, statistical analysis and image processing to find human faces within larger images and distinguish them from nonface objects such as landscapes, buildings and other human body parts.',
+                      'welcome_text_description'.tr,
                       style: TextStyles.regular14.copyWith(color: whiteColor),
                     ),
                   ],
@@ -73,7 +73,7 @@ class GetStartedScreen extends StatelessWidget {
                   ),
                   alignment: Alignment.center,
                   child: TextWidget(
-                    'Next',
+                    'next_btn'.tr,
                     style: TextStyles.regular18.copyWith(color: whiteColor),
                   ),
                 ),

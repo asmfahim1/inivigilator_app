@@ -40,8 +40,8 @@ class _SplashScreenState extends State<SplashScreen>
               child: Image.asset(appIconImage),
             ),
             TextWidget(
-              'Invigilator DEMO APP',
-              style: TextStyles.title32.copyWith(color: primaryColor),
+              'splash_text'.tr,
+              style: TextStyles.title22.copyWith(color: primaryColor),
             )
           ],
         ),

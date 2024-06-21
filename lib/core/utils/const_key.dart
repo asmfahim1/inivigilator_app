@@ -1,4 +1,4 @@
-enum AppConstant {
+enum AppConstantKey {
   USER_ID,
   TOKEN,
   LANGUAGE,
@@ -35,74 +35,72 @@ enum AppConstant {
 
 }
 
-extension AppConstantExtention on AppConstant {
+extension AppConstantExtention on AppConstantKey {
   String get key {
     switch (this) {
-      case AppConstant.USER_ID:
+      case AppConstantKey.USER_ID:
         return "USER_ID";
-      case AppConstant.TOKEN:
+      case AppConstantKey.TOKEN:
         return "TOKEN";
-      case AppConstant.LANGUAGE:
+      case AppConstantKey.LANGUAGE:
         return "language";
-      case AppConstant.DD_MM_YYYY:
+      case AppConstantKey.DD_MM_YYYY:
         return "dd-MM-yyyy";
-      case AppConstant.DD_MM_YYYY_SLASH:
+      case AppConstantKey.DD_MM_YYYY_SLASH:
         return "dd/MM/yyyy hh:mm a";
-      case AppConstant.D_MMM_Y_HM:
+      case AppConstantKey.D_MMM_Y_HM:
         return "d MMMM y hh:mm a";
-      case AppConstant.D_MM_Y:
+      case AppConstantKey.D_MM_Y:
         return "d MMM y";
-      case AppConstant.D_MMM_Y:
+      case AppConstantKey.D_MMM_Y:
         return "d MMMM y";
-      case AppConstant.MMMM_Y:
+      case AppConstantKey.MMMM_Y:
         return "MMMM y";
-      case AppConstant.MMM:
+      case AppConstantKey.MMM:
         return "MMM";
-      case AppConstant.MMM:
-        return "MMMM";
-      case AppConstant.YYYY_MM:
+      case AppConstantKey.YYYY_MM:
         return 'yyyy-MM';
-      case AppConstant.YYYY_MM_DD:
+      case AppConstantKey.YYYY_MM_DD:
         return "yyyy-MM-dd";
-      case AppConstant.APPLICATION_JSON:
+      case AppConstantKey.APPLICATION_JSON:
         return "application/json";
-      case AppConstant.BEARER:
+      case AppConstantKey.BEARER:
         return "Bearer";
-      case AppConstant.MULTIPART_FORM_DATA:
+      case AppConstantKey.MULTIPART_FORM_DATA:
         return "multipart/form-data";
-      case AppConstant.IS_SWITCHED:
+      case AppConstantKey.IS_SWITCHED:
         return "IS_SWITCHED";
-      case AppConstant.USER_AGENT:
+      case AppConstantKey.USER_AGENT:
         return "user-agent";
-      case AppConstant.BUILD_NUMBER:
+      case AppConstantKey.BUILD_NUMBER:
         return "build";
-      case AppConstant.DEVICE_ID:
+      case AppConstantKey.DEVICE_ID:
         return "device-id";
-      case AppConstant.APP_VERSION:
+      case AppConstantKey.APP_VERSION:
         return "app-version";
-      case AppConstant.DEVICE_OS:
+      case AppConstantKey.DEVICE_OS:
         return "device-os";
-      case AppConstant.PUSH_ID:
+      case AppConstantKey.PUSH_ID:
         return "push-id";
-      case AppConstant.ANDROID:
+      case AppConstantKey.ANDROID:
         return "android";
-      case AppConstant.IOS:
+      case AppConstantKey.IOS:
         return "ios";
-      case AppConstant.IPN_URL:
+      case AppConstantKey.IPN_URL:
         return "ipn_url";
-      case AppConstant.STORE_ID:
+      case AppConstantKey.STORE_ID:
         return "store_id";
-      case AppConstant.STORE_PASSWORD:
+      case AppConstantKey.STORE_PASSWORD:
         return "store_password";
-      case AppConstant.MOBILE:
+      case AppConstantKey.MOBILE:
         return "mobile";
-      case AppConstant.EMAIL:
+      case AppConstantKey.EMAIL:
         return "email";
-      case AppConstant.EN:
+      case AppConstantKey.EN:
         return 'en';
-      case AppConstant.BN:
+      case AppConstantKey.BN:
         return 'bn';
-      case AppConstant.FONTFAMILY:
+      case AppConstantKey.FONTFAMILY:
         return 'Arboria';
 
 

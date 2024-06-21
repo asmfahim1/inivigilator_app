@@ -1,34 +1,52 @@
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:invigilator_app/core/utils/db_helper.dart';
+import 'package:invigilator_app/core/utils/string_resource.dart';
+import 'package:invigilator_app/module/home/home_repo.dart';
 
 class HomeController extends GetxController{
-  File? _firstImageFile;
-  File? _secondImageFile;
-  File? _thirdImageFile;
-  File? _fourthImageFile;
-  final List<File?> _fileList = [];
+  HomeRepo? homeRepo;
+  HomeController({this.homeRepo});
 
-  set firstImageFile(File? file) {
-    _firstImageFile = file;
-    update();
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    dbHelper.init();
   }
 
-  Future<void> pickImage(
-      ImageSource source,
-      ) async {
-    final pickedImage = await ImagePicker().pickImage(source: source);
-    if (pickedImage != null) {
-      _fileList.add(File(pickedImage.path));
+  var students = <Map<String, dynamic>>[].obs;
+  final DatabaseHelper dbHelper = DatabaseHelper();
+
+
+  Future<void> fetchStudents() async {
+    try {
+      final data = await dbHelper.getStudents();
+      students.value = data;
+    } catch (e) {
+      print("Error fetching students: $e");
     }
   }
 
+  RxBool isStudentFetched = false.obs;
+  Future<void> insertStudents() async {
+    isStudentFetched(true);
+    try {
+      if (await dbHelper.hasStudents()) {
+        await dbHelper.clearDatabase();
+      }
+      for (var student in studentsList) {
+        student['face_vector'] = student['face_vector'].toString();
+        await dbHelper.insertStudent(student);
+      }
+      fetchStudents();
 
-  File? get firstImageFile => _firstImageFile;
-  File? get secondImageFile => _secondImageFile;
-  File? get thirdImageFile => _thirdImageFile;
-  File? get fourthImageFile => _fourthImageFile;
-
-
+    } catch (error) {
+      if (kDebugMode) {
+        print('=======Something went wrong====$error');
+      }
+    } finally {
+      isStudentFetched(false);
+    }
+  }
 }

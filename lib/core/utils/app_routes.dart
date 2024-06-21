@@ -22,15 +22,15 @@ class AppRoutes {
     GetPage(
         name: splashScreen,
         transition: Transition.cupertino,
-        page: () => const SplashScreen()),
+        page: () => SplashScreen()),
     GetPage(
         name: getStartedScreen,
         transition: Transition.cupertino,
-        page: () => const GetStartedScreen()),
+        page: () => GetStartedScreen()),
     GetPage(
         name: loginScreen,
         transition: Transition.noTransition,
-        page: () => const LoginScreen()),
+        page: () => LoginScreen()),
     GetPage(
         name: homeScreen,
         transition: Transition.noTransition,
@@ -38,6 +38,6 @@ class AppRoutes {
     GetPage(
         name: studentInfoScreen,
         transition: Transition.noTransition,
-        page: () => const StudentsInfo()),
+        page: () => StudentsInfo()),
   ];
 }
