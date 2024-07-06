@@ -23,7 +23,7 @@ class LoginFormSectionWidget extends StatelessWidget {
       return Form(
         key: _formKey,
         child: Container(
-          height: Dimensions.screenHeight / 2,
+          height: Dimensions.screenHeight * .5,
           width: Dimensions.screenWidth,
           padding: const EdgeInsets.symmetric(horizontal: 15),
           decoration: BoxDecoration(
@@ -90,10 +90,10 @@ class LoginFormSectionWidget extends StatelessWidget {
 
   Widget _loginButton(LoginController login) {
     return CommonButton(
-      btnHeight: Dimensions.screenWidth / 1.6,
+      height: Dimensions.height50,
       buttonColor: blueColor,
       buttonTitle: 'login'.tr,
-      onTap: () {
+      onPressed: () {
         Get.toNamed(AppRoutes.homeScreen);
         // if (_formKey.currentState!.validate()) {
         //   login.loginMethod();

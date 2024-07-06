@@ -108,7 +108,7 @@ class HomeScreen extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           itemCount: 5,
           itemBuilder: (context, index) {
-            return InkWell(
+            return GestureDetector(
               onTap: (){
                 Get.toNamed(AppRoutes.studentInfoScreen);
               },

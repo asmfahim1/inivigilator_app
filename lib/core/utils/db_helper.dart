@@ -109,4 +109,8 @@ class DatabaseHelper {
   Future<int> insertAttendanceRecord(Map<String, dynamic> record) async {
     return await _db.insert(attendanceRecordTable, record);
   }
+
+  Future<List<Map<String, dynamic>>> getAllAttendedStudent() async {
+    return await _db.query(attendanceRecordTable);
+  }
 }

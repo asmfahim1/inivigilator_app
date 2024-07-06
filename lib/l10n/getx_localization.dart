@@ -23,7 +23,8 @@ class Language extends Translations {
       'welcome' : 'Invigilator DEMO APP',
 
       //student screen info
-      'student_info_title' : 'Student\'s info',
+      'student_info_title' : "Candidate's Information",
+      'attended_student' : "Attendance List",
 
 
       // loginController
@@ -61,6 +62,13 @@ class Language extends Translations {
       'complete_process': 'অনুগ্রহ করে পরীক্ষা করুন এবং প্রক্রিয়াটি সম্পূর্ণ করুন',
       'complete_btn': 'প্রক্রিয়া সম্পূর্ণ করুন',
       'completed_registration': 'আপনি সফলভাবে ___ পরীক্ষার জন্য নিবন্ধন প্রক্রিয়া সম্পন্ন করেছেন',
+
+
+      //student screen info
+      'student_info_title' : "পরীক্ষার্থীর তথ্য",
+      'attended_student' : "উপস্থিতি তালিকা",
+
+
 
       // loginController
       'please_wait' : 'অনুগ্রহপূর্বক অপেক্ষা করুন...',

@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:camera/camera.dart';
 import 'package:invigilator_app/core/ML/Recognition.dart';
+import 'package:invigilator_app/core/utils/app_routes.dart';
+import 'package:invigilator_app/core/utils/colors.dart';
+import 'package:invigilator_app/core/utils/dimensions.dart';
+import 'package:invigilator_app/core/utils/exports.dart';
+import 'package:invigilator_app/core/widgets/exports.dart';
 import 'package:invigilator_app/module/home/controller/test_controller.dart';
 
-class MyHomePage extends StatelessWidget {
+class RecognitionScreen extends StatelessWidget {
   final TestController testController = Get.find<TestController>();
 
-  MyHomePage({super.key});
+  RecognitionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
 
     return SafeArea(
       child: Scaffold(
@@ -28,8 +32,8 @@ class MyHomePage extends StatelessWidget {
                 Positioned(
                   top: 0.0,
                   left: 0.0,
-                  width: size.width,
-                  height: size.height,
+                  width: Dimensions.screenWidth,
+                  height: Dimensions.screenHeight,
                   child: Container(
                     child: AspectRatio(
                       aspectRatio: testController.controller!.value.aspectRatio,
@@ -48,8 +52,8 @@ class MyHomePage extends StatelessWidget {
                     return Positioned(
                       top: 0.0,
                       left: 0.0,
-                      width: size.width,
-                      height: size.height,
+                      width: Dimensions.screenWidth,
+                      height: Dimensions.screenHeight,
                       child: CustomPaint(
                         painter: FaceDetectorPainter(
                             imageSize, testController.scanResults, testController.camDirec.value),
@@ -58,39 +62,18 @@ class MyHomePage extends StatelessWidget {
                   }
                 }),
                 Positioned(
-                  top: size.height - 140,
+                  top: Dimensions.screenHeight - (Dimensions.height100 * 1.4),
                   left: 0,
-                  width: size.width,
-                  height: 80,
-                  child: Card(
-                    margin: const EdgeInsets.only(left: 20, right: 20),
-                    color: Colors.blue,
-                    child: Center(
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.cached,
-                                    color: Colors.white,
-                                  ),
-                                  iconSize: 40,
-                                  color: Colors.black,
-                                  onPressed: () {
-                                    testController.toggleCameraDirection();
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  width: Dimensions.screenWidth,
+                  height: Dimensions.height100 * .8,
+                  child: CommonButton(
+                    height: Dimensions.height40,
+                    width: Dimensions.width180,
+                    buttonColor: blueColor,
+                    buttonTitle: 'Stop session',
+                    onPressed: () {
+                      Get.offNamed(AppRoutes.attendanceListScreen);
+                    },
                   ),
                 ),
               ],
@@ -152,3 +135,28 @@ class FaceDetectorPainter extends CustomPainter {
     return true;
   }
 }
+
+/*Card(
+margin: const EdgeInsets.only(left: 20, right: 20),
+color: secondaryColor,
+child: Center(
+child: Container(
+child: Row(
+mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+children: [
+TextWidget('End session', style: TextStyles.regular16.copyWith(fontWeight: FontWeight.bold, color: whiteColor),),
+IconButton(
+icon: const Icon(
+Icons.cached,
+color: Colors.white,
+),
+iconSize: 40,
+onPressed: () {
+testController.toggleCameraDirection();
+},
+),
+],
+),
+),
+),
+),*/

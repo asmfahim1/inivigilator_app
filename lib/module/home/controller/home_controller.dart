@@ -52,20 +52,18 @@ class HomeController extends GetxController{
     }
   }
 
-  // Future<void> fetchStudentsFromApi() async {
-  //   final url = 'YOUR_API_ENDPOINT'; // Replace with your API endpoint
-  //   try {
-  //     final response = await http.get(Uri.parse(url));
-  //     if (response.statusCode == 200) {
-  //       List<dynamic> apiData = json.decode(response.body);
-  //       List<StudentModel> studentsList = apiData.map((json) => StudentModel.fromJson(json)).toList();
-  //       await insertStudents(studentsList);
-  //     } else {
-  //       print('Failed to load students from API');
-  //     }
-  //   } catch (e) {
-  //     print('Error fetching students from API: $e');
-  //   }
-  // }
+  RxBool isAttendedFound = false.obs;
+  var attendedStudents = <Map<String, dynamic>>[].obs;
+  Future<void> fetchPresentStudent() async {
+    isAttendedFound(true);
+    try {
+      final data = await dbHelper.getAllAttendedStudent();
+      attendedStudents.value = data;
+    } catch (e) {
+      print("Error fetching students: $e");
+    } finally {
+      isAttendedFound(false);
+    }
+  }
 
 }
