@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:invigilator_app/core/utils/db_helper.dart';
 import 'package:invigilator_app/core/utils/string_resource.dart';
-import 'package:invigilator_app/module/home/home_repo.dart';
+import 'package:invigilator_app/module/home/repo/home_repo.dart';
 
 class HomeController extends GetxController{
   HomeRepo? homeRepo;
@@ -35,8 +35,10 @@ class HomeController extends GetxController{
       if (await dbHelper.hasStudents()) {
         await dbHelper.clearDatabase();
       }
+
       for (var student in studentsList) {
-        student['face_vector'] = student['face_vector'].toString();
+        var faceVectorString = (student['face_vector']).join(',');
+        student['face_vector'] = faceVectorString; // Convert list to comma-separated string
         await dbHelper.insertStudent(student);
       }
       fetchStudents();
@@ -49,4 +51,21 @@ class HomeController extends GetxController{
       isStudentFetched(false);
     }
   }
+
+  // Future<void> fetchStudentsFromApi() async {
+  //   final url = 'YOUR_API_ENDPOINT'; // Replace with your API endpoint
+  //   try {
+  //     final response = await http.get(Uri.parse(url));
+  //     if (response.statusCode == 200) {
+  //       List<dynamic> apiData = json.decode(response.body);
+  //       List<StudentModel> studentsList = apiData.map((json) => StudentModel.fromJson(json)).toList();
+  //       await insertStudents(studentsList);
+  //     } else {
+  //       print('Failed to load students from API');
+  //     }
+  //   } catch (e) {
+  //     print('Error fetching students from API: $e');
+  //   }
+  // }
+
 }

@@ -4,6 +4,7 @@ import 'package:invigilator_app/core/utils/dimensions.dart';
 import 'package:invigilator_app/core/utils/exports.dart';
 import 'package:invigilator_app/core/widgets/exports.dart';
 import 'package:invigilator_app/module/home/controller/home_controller.dart';
+import 'package:invigilator_app/module/home/view/recognition_screen.dart';
 
 class StudentsInfo extends StatelessWidget {
   StudentsInfo({Key? key}) : super(key: key);
@@ -34,7 +35,7 @@ class StudentsInfo extends StatelessWidget {
                       itemBuilder: (_, index) {
                         var student = homeController.students[index];
                         return Container(
-                          height: Dimensions.height100,
+                          height: Dimensions.height100 * 1.5,
                           width: Dimensions.screenWidth,
                           padding: const EdgeInsets.all(10),
                           margin: const EdgeInsets.all(8),
@@ -72,6 +73,10 @@ class StudentsInfo extends StatelessWidget {
                                     'exam : ${student['exam_name']}',
                                     style: TextStyles.title16,
                                   ),
+                                  TextWidget(
+                                    'face_vector_length : ${student['face_vector'].length}',
+                                    style: TextStyles.title16,
+                                  ),
                                 ],
                               ),
                             ],
@@ -90,7 +95,7 @@ class StudentsInfo extends StatelessWidget {
                 buttonColor: blueColor,
                 buttonTitle: 'Start detection',
                 onTap: () {
-                  //login method will call
+                  Get.to(()=> MyHomePage());
                 },
               ),
             ),

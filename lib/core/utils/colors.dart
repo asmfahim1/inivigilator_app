@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 ///
-const primaryColor = Color(0xFFDB3742);
-const secondaryColor = Color(0xFFFFA654);
+const primaryColor = Color(0xFF85CCFB);
+const secondaryColor = Color(0xFF9877EB);
 const transparentColor = Colors.transparent;
 const whiteColor = Colors.white;
 const blackColor = Colors.black;
@@ -14,7 +14,7 @@ const lightColor = Color(0xFFE6ECFF);
 const profileContainerColor = Color(0xFFF3F2F8);
 const profileContactColor = Color(0xFFFAFAFC);
 const contactEditIconColor = Color(0xFFCBC7D7);
-const iconPrimaryColor = Color(0xFF241E36);
+const iconPrimaryColor = Color(0xFF343541);
 const blueColor = Colors.blue;
 const blueBlackColor = Color(0xFF241E36);
 const orangeColor = Colors.orange;

@@ -4,7 +4,9 @@ import 'package:invigilator_app/core/utils/app_constants.dart';
 import 'package:invigilator_app/module/auth/login/controller/login_controller.dart';
 import 'package:invigilator_app/module/auth/login/repo/login_repo.dart';
 import 'package:invigilator_app/module/home/controller/home_controller.dart';
-import 'package:invigilator_app/module/home/home_repo.dart';
+import 'package:invigilator_app/module/home/controller/test_controller.dart';
+import 'package:invigilator_app/module/home/repo/home_repo.dart';
+import 'package:invigilator_app/module/home/repo/test_repo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> init() async {
@@ -28,6 +30,10 @@ Future<void> init() async {
       () => HomeRepo(apiClient: Get.find(), sharedPreferences: Get.find()),
       fenix: true);
 
+  Get.lazyPut(
+      () => TestRepo(apiClient: Get.find(), sharedPreferences: Get.find()),
+      fenix: true);
+
   ///Controller
   //Auth
   Get.lazyPut(() => LoginController(loginRepo: Get.find<LoginRepo>()),
@@ -35,5 +41,9 @@ Future<void> init() async {
 
 
   Get.lazyPut(() => HomeController(homeRepo: Get.find<HomeRepo>()),
+      fenix: true);
+
+
+  Get.lazyPut(() => TestController(testRepo: Get.find<TestRepo>()),
       fenix: true);
 }

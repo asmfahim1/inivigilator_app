@@ -34,7 +34,7 @@ class AppRoutes {
     GetPage(
         name: homeScreen,
         transition: Transition.noTransition,
-        page: () => const HomeScreen()),
+        page: () => HomeScreen()),
     GetPage(
         name: studentInfoScreen,
         transition: Transition.noTransition,

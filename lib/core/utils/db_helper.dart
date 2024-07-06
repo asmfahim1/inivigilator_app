@@ -6,7 +6,8 @@ class DatabaseHelper {
   static const _databaseName = "MyDatabase.db";
   static const _databaseVersion = 1;
 
-  static const table = 'student_table';
+  static const tableName = 'student_table';
+  static const attendanceRecordTable = 'attendance_record_table';
 
   static const columnId = 'id';
   static const studentId = 'student_id';
@@ -34,7 +35,7 @@ class DatabaseHelper {
   // SQL code to create the database table
   Future _onCreate(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE students (
+      CREATE TABLE $tableName (
         $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
         $studentId TEXT,
         $student_name TEXT,
@@ -45,46 +46,67 @@ class DatabaseHelper {
         $updated_at TEXT
       )
     ''');
+    await db.execute('''
+      CREATE TABLE $attendanceRecordTable (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        distance REAL,
+        timestamp TEXT
+      )
+    ''');
   }
 
   //insert
   Future<int> insert(Map<String, dynamic> row) async {
-    return await _db.insert(table, row);
+    return await _db.insert(tableName, row);
   }
 
-  Future<void> insertStudent(Map<String, dynamic> student) async {
-    // final db = _db;
-    await _db.insert(
-      'students',
-      student,
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+  Future<int> insertStudent(Map<String, dynamic> student) async {
+    //var dbClient = await db;
+    return await _db.insert(tableName, student);
   }
 
   Future<List<Map<String, dynamic>>> getStudents() async {
-    // final db = await database;
-    return await _db.query('students');
+    //var dbClient = await db;
+    return await _db.query(tableName);
+  }
+
+  Future<int> clearDatabase() async {
+    //var dbClient = await db;
+    return await _db.delete(tableName);
+  }
+
+  Future<bool> hasStudents() async {
+    //var dbClient = await db;
+    var result = await _db.rawQuery('SELECT COUNT(*) FROM $tableName');
+    int count = Sqflite.firstIntValue(result)!;
+    return count > 0;
   }
 
 
   //get all rows
   Future<List<Map<String, dynamic>>> queryAllRows() async {
-    return await _db.query(table);
+    return await _db.query(tableName);
   }
 
   // raw SQL commands. This method uses a raw query to give the row count.
   Future<int> queryRowCount() async {
-    final results = await _db.rawQuery('SELECT COUNT(*) FROM $table');
+    final results = await _db.rawQuery('SELECT COUNT(*) FROM $tableName');
     return Sqflite.firstIntValue(results) ?? 0;
   }
 
-  Future<void> clearDatabase() async {
-    await _db.delete('students');
+
+  Future<bool> isNameAlreadyPresent(String name) async {
+    var result = await _db.query(
+      attendanceRecordTable,
+      where: 'name = ?',
+      whereArgs: [name],
+    );
+    return result.isNotEmpty;
   }
 
-  Future<bool> hasStudents() async {
-    //final db = await database;
-    final count = Sqflite.firstIntValue(await _db.rawQuery('SELECT COUNT(*) FROM students'));
-    return count! > 0;
+
+  Future<int> insertAttendanceRecord(Map<String, dynamic> record) async {
+    return await _db.insert(attendanceRecordTable, record);
   }
 }

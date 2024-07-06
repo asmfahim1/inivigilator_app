@@ -94,7 +94,7 @@ class ApiClient extends GetConnect implements GetxService {
       return map;
     } on dio.DioException catch (error) {
 
-      throw 'Something Went Wrong';
+      throw 'Something Went Wrong $error';
 
     } catch (error) {
 
