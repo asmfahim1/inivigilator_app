@@ -48,6 +48,7 @@ class MyApp extends StatelessWidget {
         progressIndicatorTheme: const ProgressIndicatorThemeData(
           color: primaryColor,
         ),
+        scaffoldBackgroundColor: whiteColor,
         textTheme: GoogleFonts.poppinsTextTheme(),
         primaryColor: primaryColor,
         visualDensity: VisualDensity.adaptivePlatformDensity,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:invigilator_app/core/utils/dimensions.dart';
 
 class UploadedPicturesWidget extends StatelessWidget {
   const UploadedPicturesWidget(
@@ -16,10 +17,10 @@ class UploadedPicturesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(50),
-      child: const Icon(
+      borderRadius: BorderRadius.circular(Dimensions.radius20 * 2.5),
+      child: Icon(
         Icons.person,
-        size: 30,
+        size: Dimensions.iconSize30,
       ),
     );
   }

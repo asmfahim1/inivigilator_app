@@ -25,10 +25,10 @@ class LoginFormSectionWidget extends StatelessWidget {
         child: Container(
           height: Dimensions.screenHeight * .5,
           width: Dimensions.screenWidth,
-          padding: const EdgeInsets.symmetric(horizontal: 15),
+          padding: EdgeInsets.symmetric(horizontal: Dimensions.padding15,),
           decoration: BoxDecoration(
             color: whiteColor.withOpacity(0.7),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(Dimensions.radius20),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -60,7 +60,9 @@ class LoginFormSectionWidget extends StatelessWidget {
             FocusScope.of(context).requestFocus(_passwordFocus);
           },
         ),
+
         const SizedBoxHeight20(),
+
         CommonTextField(
           validator: Validator().nullFieldValidate,
           hintText: 'password_hint'.tr,

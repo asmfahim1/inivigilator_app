@@ -5,7 +5,7 @@ description: A new Flutter project.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: '>=3.1.0 <4.0.0'
+  sdk: '>=3.3.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -34,9 +34,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  #this line is added for localization
-  flutter_localizations:
-    sdk: flutter
+
 
   flutter_lints: ^2.0.0
   very_good_analysis: ^5.0.0+1

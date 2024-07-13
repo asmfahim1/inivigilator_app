@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:invigilator_app/core/utils/dimensions.dart';
 import 'package:invigilator_app/core/widgets/exports.dart';
 import '../../../../core/utils/app_routes.dart';
 import '../../../../core/utils/exports.dart';
@@ -20,9 +21,8 @@ class GetStartedScreen extends StatelessWidget {
   }
 
   Widget _topSectionWidget(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Container(
-      height: size.height / 2,
+      height: Dimensions.heightScreenHalf,
       decoration: const BoxDecoration(
         image: DecorationImage(
           image: AssetImage(loginBackgroundImage),
@@ -33,7 +33,6 @@ class GetStartedScreen extends StatelessWidget {
   }
 
   Widget _bottomSectionWidget(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Expanded(
       child: InkWell(
         onTap: () {
@@ -44,7 +43,7 @@ class GetStartedScreen extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                height: size.height / 2.4,
+                height: Dimensions.height100 * 3.33,
                 padding: allPadding20,
                 child: Column(
                   children: [
@@ -62,7 +61,7 @@ class GetStartedScreen extends StatelessWidget {
               ),
               Expanded(
                 child: Container(
-                  width: size.width,
+                  width: Dimensions.screenWidth,
                   decoration: const BoxDecoration(
                     border: Border(
                       top: BorderSide(

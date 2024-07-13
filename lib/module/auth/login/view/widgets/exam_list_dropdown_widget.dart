@@ -14,25 +14,25 @@ class ExamDropdown extends StatelessWidget {
     return GetBuilder<LoginController>(
       builder: (controller) {
         if (controller.isExamListLoaded.value) {
-          return const Center(child: CircularProgressIndicator(color: primaryColor,)); // Show loading indicator while fetching data
+          return const Center(
+              child: CircularProgressIndicator(
+                color: primaryColor,
+              )); // Show loading indicator while fetching data
         }
 
         if (controller.examList.isEmpty) {
-          return Text(
+          return TextWidget(
             'null_exam_list'.tr,
-            style: const TextStyle(
-              fontSize: 16.0,
-              color: Colors.red,
-            ),
+            style: TextStyles.regular14.copyWith(color: redColor),
           );
         }
 
         return Container(
-          height: Dimensions.screenHeight / 14,
+          height: Dimensions.height10 * 5.7,
           width: Dimensions.screenWidth,
-          padding: const EdgeInsets.only(left: 10, right: 10),
+          padding: EdgeInsets.only(left: Dimensions.padding10, right: Dimensions.padding10),
           alignment: Alignment.centerLeft,
-          margin: const EdgeInsets.only(top: 10),
+          margin: EdgeInsets.only(top: Dimensions.padding10),
           decoration: BoxDecoration(
             border: Border.all(
               color: Colors.grey,
@@ -42,7 +42,7 @@ class ExamDropdown extends StatelessWidget {
           ),
           child: DropdownButton<String>(
             underline: const SizedBox(),
-            iconSize: 30.0,
+            iconSize: Dimensions.iconSize30,
             style: const TextStyle(
               fontSize: 18.0,
               color: Colors.black,
@@ -54,12 +54,11 @@ class ExamDropdown extends StatelessWidget {
               );
             }).toList(),
             onChanged: (selectedExam) {
-
               controller.setSelectedValue(selectedExam!);
-              // final exam = controller.examList
-              //     .firstWhere((element) => element.name! == selectedExam);
-              // controller.examType.value = exam.name!;
-              // controller.examId.value = exam.id!;
+              final exam = controller.examList
+                  .firstWhere((element) => element.name! == selectedExam);
+              controller.examType.value = exam.name!;
+              controller.examId.value = exam.id!;
             },
             hint: TextWidget(
               controller.examType.value,

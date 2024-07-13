@@ -266,7 +266,9 @@ class TestController extends GetxController {
   }
 
   Future<void> resumeCameraPreview() async {
-    print("Resuming camera preview...");
+    if (kDebugMode) {
+      print("Resuming camera preview...");
+    }
     // Resume the camera preview
     isBusy.value = false;
     if (controller != null) {
@@ -279,18 +281,24 @@ class TestController extends GetxController {
         }
       });
     } else {
-      print("Camera controller is null");
+      if (kDebugMode) {
+        print("Camera controller is null");
+      }
     }
   }
 
   // Stop the camera and release resources
   Future<void> stopCamera() async {
-    print("Stopping camera preview...");
+    if (kDebugMode) {
+      print("Stopping camera preview...");
+    }
     if (controller != null) {
       await controller!.pausePreview();
       await controller!.stopImageStream();
     } else {
-      print("Camera controller is null");
+      if (kDebugMode) {
+        print("Camera controller is null");
+      }
     }
   }
 }

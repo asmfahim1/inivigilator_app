@@ -25,6 +25,7 @@ class Language extends Translations {
       //student screen info
       'student_info_title' : "Candidate's Information",
       'attended_student' : "Attendance List",
+      'empty_attendance_list' : "No attendance count yet",
 
 
       // loginController
@@ -32,6 +33,10 @@ class Language extends Translations {
       'no_data' : 'No data found',
       'warning' : 'Warning!',
       'error_unknown' : 'Unknown error occurred',
+
+      // homeController
+      'attendance' : 'Attended Student',
+      'total' : 'Total',
 
     },
 

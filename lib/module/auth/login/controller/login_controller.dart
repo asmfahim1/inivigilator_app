@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:invigilator_app/core/utils/app_routes.dart';
 import 'package:invigilator_app/core/utils/dialogue_utils.dart';
 import 'package:invigilator_app/core/utils/extensions.dart';
 import 'package:invigilator_app/module/auth/login/model/all_exams_model.dart';
@@ -25,7 +24,7 @@ class LoginController extends GetxController {
   bool get passwordVisible => _passwordVisible.value;
 
 
-  RxString examType = 'Exam type'.obs;
+  RxString examType = 'exams'.tr.obs;
   RxInt examId = 0.obs;
 
 
@@ -34,16 +33,13 @@ class LoginController extends GetxController {
         .firstWhere((element) => element.name! == examName);
     examType.value = exam.name!;
     examId.value = exam.id!;
-    if (kDebugMode) {
-      print('========${examType}============${examId}');
-    }
     update();
   }
 
   @override
   void onInit() {
     super.onInit();
-    //getAllExams();
+    getAllExams();
   }
 
 
@@ -54,6 +50,8 @@ class LoginController extends GetxController {
     try {
       isExamListLoaded.value = true; // Set loading state to true
       Response response = await loginRepo!.getAllExams();
+
+
       if (response.statusCode == 200) {
         var list = examNameListFromJson(response.bodyString!);
         examList.value = list;
@@ -66,15 +64,9 @@ class LoginController extends GetxController {
     } finally {
       isExamListLoaded.value = false; // Set loading state to false
     }
+
     update();
-
   }
-
-
-
-
-
-
 
 
   Future<void> loginMethod() async {

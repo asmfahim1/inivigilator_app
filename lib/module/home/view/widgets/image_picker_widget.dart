@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:invigilator_app/core/utils/dimensions.dart';
 import '../../../../core/utils/colors.dart';
 
 class ImagePickerWidget extends StatelessWidget {
@@ -16,25 +17,25 @@ class ImagePickerWidget extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        height: 170,
-        width: 155,
+        height: Dimensions.height100 * 1.75,
+        width: Dimensions.width100 * 1.55,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           border: Border.all(color: strokeColor),
         ),
         child: SizedBox(
-          height: 48,
-          width: 48,
+          height: Dimensions.height10 * 4.8,
+          width: Dimensions.width10 * 4.8,
           child: imageFile != null
               ? Image.file(
                   imageFile!,
-                  width: 200,
-                  height: 200,
+                  width: Dimensions.width100 * 2,
+                  height: Dimensions.height100 * 2,
                   fit: BoxFit.cover,
                 )
-              : const Icon(
+              : Icon(
                   Icons.camera_alt_outlined,
-                  size: 50,
+                  size: Dimensions.iconSize25 * 2,
                   color: Colors.grey,
                 ),
         ),

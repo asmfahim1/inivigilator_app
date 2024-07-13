@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:invigilator_app/core/utils/app_routes.dart';
 import 'package:invigilator_app/core/utils/dimensions.dart';
+import 'package:invigilator_app/core/widgets/exports.dart';
+import 'package:invigilator_app/core/widgets/sized_box_height_10.dart';
 import '../../../core/utils/colors.dart';
 import '../../../core/utils/styles.dart';
-import '../../../core/widgets/common_appbar.dart';
-import '../../../core/widgets/text_widget.dart';
 import '../controller/home_controller.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -20,28 +20,23 @@ class HomeScreen extends StatelessWidget {
         autoImply: false,
         title: 'dashboard'.tr,
         actions: [
-          GestureDetector(
-            onTap: () {
-              Get.back();
+          IconButton(
+            onPressed: () {
+              Get.offAllNamed(AppRoutes.loginScreen);
             },
-            child: const Padding(
-              padding: EdgeInsets.only(right: 10),
-              child: Icon(
-                Icons.logout_outlined,
-                color: redColor,
-                size: 25,
-              ),
+            icon: Icon(
+              Icons.logout_outlined,
+              color: redColor,
+              size: Dimensions.iconSize30,
             ),
-          )
+          ),
         ],
       ),
       body: Column(
         children: [
           _profileWidget(),
-          const SizedBox(
-            height: 20,
-          ),
-          Expanded(child: _examRooms()),
+          const SizedBoxHeight20(),
+          Expanded(child: _examRooms(),),
         ],
       ),
     );
@@ -51,29 +46,29 @@ class HomeScreen extends StatelessWidget {
     return Container(
       height: Dimensions.height100 * 1.3,
       width: Dimensions.screenWidth,
-      padding: const EdgeInsets.all(10),
+      padding: EdgeInsets.all(Dimensions.padding15),
       margin: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: Colors.grey.shade300,
         border: Border.all(),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(Dimensions.radius12),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const CircleAvatar(
+          CircleAvatar(
             backgroundColor: blueColor,
-            radius: 35,
+            radius: Dimensions.radius20 + Dimensions.radius12,
             child: Icon(
               Icons.person,
-              size: 40,
+              size: Dimensions.iconSize20 * 2,
               color: Colors.white,
             ),
           ),
-          const SizedBox(
-            width: 10,
-          ),
+          SizedBox(width: Dimensions.width20,),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextWidget(
                 'ABC XYZ',
@@ -96,7 +91,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget _examRooms(){
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: EdgeInsets.all(Dimensions.padding10),
       child: GridView.builder(
           gridDelegate:
           const SliverGridDelegateWithFixedCrossAxisCount(
@@ -114,10 +109,10 @@ class HomeScreen extends StatelessWidget {
               },
               child: Card(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
+                  borderRadius: BorderRadius.circular(Dimensions.radius12),
                 ),
                 color: secondaryColor,
-                elevation: 3,
+                elevation: 5,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

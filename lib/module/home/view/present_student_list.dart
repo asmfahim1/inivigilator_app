@@ -4,7 +4,7 @@ import 'package:invigilator_app/core/utils/dimensions.dart';
 import 'package:invigilator_app/core/utils/exports.dart';
 import 'package:invigilator_app/core/widgets/exports.dart';
 import 'package:invigilator_app/module/home/controller/home_controller.dart';
-import 'package:invigilator_app/module/home/view/recognition_screen.dart';
+import 'package:invigilator_app/module/home/view/widgets/attended_student_list_tile_widget.dart';
 
 class AttendanceListScreen extends StatelessWidget {
   AttendanceListScreen({Key? key}) : super(key: key);
@@ -19,46 +19,78 @@ class AttendanceListScreen extends StatelessWidget {
       appBar: CommonAppbar(
         autoImply: true,
         title: 'attended_student'.tr,
+        actions: [
+          GestureDetector(
+            onTap: () {},
+            child: Padding(
+              padding: EdgeInsets.only(
+                right: Dimensions.padding10,
+              ),
+              child: Icon(
+                Icons.file_upload_outlined,
+                size: Dimensions.iconSize25,
+              ),
+            ),
+          ),
+        ],
       ),
       body: Container(
         height: Dimensions.screenHeight,
         width: Dimensions.screenWidth,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.padding10,
+        ),
         child: Obx(() {
-          return homeController.isAttendedFound.value
-              ? const Center(child: CircularProgressIndicator())
-              : ListView.separated(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: homeController.attendedStudents.length,
-                  itemBuilder: (_, index) {
-                    var student = homeController.attendedStudents[index];
-                    print('------------$student-------------');
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: const Color(0xff764abc),
-                        child: TextWidget(
-                          "${student['id'].toString()}",
-                          style:
-                              TextStyles.regular14.copyWith(color: whiteColor),
-                        ),
+          return Column(
+            children: [
+              Container(
+                height: Dimensions.height50,
+                width: Dimensions.screenWidth,
+                padding: EdgeInsets.symmetric(horizontal: Dimensions.padding10),
+                decoration: const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: blackColor,
+                    ),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextWidget(
+                      'attendance'.tr,
+                      style: TextStyles.title16,
+                    ),
+                    TextWidget(
+                      '${'total'.tr} : ${homeController.attendedStudents.length}',
+                      style: TextStyles.title16,
+                    ),
+                  ],
+                ),
+              ),
+              homeController.isAttendedFound.value
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: primaryColor,
                       ),
-                      title: TextWidget(
-                        'Name: ${student['name']}',
-                        style: TextStyles.title16,
+                    )
+                  : homeController.attendedStudents.isEmpty
+                      ? Expanded(
+                        child: Center(
+                            child: TextWidget(
+                              'empty_attendance_list'.tr,
+                              style: TextStyles
+                                  .regular16, // Customize the style as needed
+                            ),
+                          ),
+                      )
+                      : Expanded(
+                        child: AttendedStudentsListTile(
+                            attendedStudentList: homeController.attendedStudents,
+                          ),
                       ),
-                      subtitle: TextWidget(
-                        'Matching distance: ${student['distance'].toStringAsFixed(2)}',
-                        style: TextStyles.title16,
-                      ),
-                      trailing: Icon(Icons.check, color: greenColor),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return Divider(
-                      thickness: 1.2,
-                    );
-                  },
-                );
+            ],
+          );
         }),
       ),
     );

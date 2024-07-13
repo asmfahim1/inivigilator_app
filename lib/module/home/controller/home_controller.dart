@@ -53,6 +53,7 @@ class HomeController extends GetxController{
   }
 
   RxBool isAttendedFound = false.obs;
+  RxInt attendanceCount = 0.obs;
   var attendedStudents = <Map<String, dynamic>>[].obs;
   Future<void> fetchPresentStudent() async {
     isAttendedFound(true);

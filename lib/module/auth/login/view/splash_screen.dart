@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:invigilator_app/core/utils/dimensions.dart';
 import 'package:invigilator_app/core/widgets/exports.dart';
 
 import '../../../../core/utils/app_routes.dart';
@@ -34,9 +35,9 @@ class _SplashScreenState extends State<SplashScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              height: MediaQuery.of(context).size.height / 14,
-              width: MediaQuery.of(context).size.width / 1.5,
+            SizedBox(
+              height: Dimensions.height10 * 5.7,
+              width: Dimensions.width100 * 2.4,
               child: Image.asset(appIconImage),
             ),
             TextWidget(

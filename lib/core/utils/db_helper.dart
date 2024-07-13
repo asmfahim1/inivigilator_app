@@ -107,7 +107,11 @@ class DatabaseHelper {
 
 
   Future<int> insertAttendanceRecord(Map<String, dynamic> record) async {
-    return await _db.insert(attendanceRecordTable, record);
+    if (record['name'] == 'Unknown') {
+      return -1; // Return a value indicating failure or handle appropriately
+    } else {
+      return await _db.insert(attendanceRecordTable, record);
+    }
   }
 
   Future<List<Map<String, dynamic>>> getAllAttendedStudent() async {
