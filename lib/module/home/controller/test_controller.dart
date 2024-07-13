@@ -57,7 +57,7 @@ class TestController extends GetxController {
     try {
       cameras = await availableCameras();
       description = cameras.firstWhere(
-              (camera) => camera.lensDirection == camDirec.value,
+          (camera) => camera.lensDirection == camDirec.value,
           orElse: () => cameras.first);
       controller = CameraController(
         description,
@@ -104,8 +104,8 @@ class TestController extends GetxController {
 
     final inputImageData = InputImageData(
       size: Size(image.width.toDouble(), image.height.toDouble()),
-      imageRotation:
-      _rotationIntToImageRotation(controller!.description.sensorOrientation),
+      imageRotation: _rotationIntToImageRotation(
+          controller!.description.sensorOrientation),
       inputImageFormat: InputImageFormatValue.fromRawValue(image.format.raw) ??
           InputImageFormat.nv21,
       planeData: image.planes.map((Plane plane) {
@@ -133,7 +133,8 @@ class TestController extends GetxController {
     }
   }
 
-  Future<void> performFaceRecognition(List<Face> faces, CameraImage cameraImage) async {
+  Future<void> performFaceRecognition(
+      List<Face> faces, CameraImage cameraImage) async {
     scanResults.clear();
 
     // Convert CameraImage to Image and rotate it
@@ -145,7 +146,7 @@ class TestController extends GetxController {
       // Find the closest face based on the size of the bounding box
       Face closestFace = faces.reduce((curr, next) {
         return (curr.boundingBox.height * curr.boundingBox.width) >
-            (next.boundingBox.height * curr.boundingBox.width)
+                (next.boundingBox.height * curr.boundingBox.width)
             ? curr
             : next;
       });
@@ -168,9 +169,10 @@ class TestController extends GetxController {
         showFaceRecognitionDialog(recognition);
         scanResults.add(recognition);
         return; // Stop further processing
-      } else {
-        recognition.name = "Unknown";
       }
+      // else {
+      //   recognition.name = "Unknown";
+      // }
     }
 
     isBusy.value = false;
@@ -214,9 +216,9 @@ class TestController extends GetxController {
     b = b.clamp(0, 255);
 
     return 0xff000000 |
-    ((b << 16) & 0xff0000) |
-    ((g << 8) & 0xff00) |
-    (r & 0xff);
+        ((b << 16) & 0xff0000) |
+        ((g << 8) & 0xff00) |
+        (r & 0xff);
   }
 
   void toggleCameraDirection() async {
@@ -302,4 +304,3 @@ class TestController extends GetxController {
     }
   }
 }
-
