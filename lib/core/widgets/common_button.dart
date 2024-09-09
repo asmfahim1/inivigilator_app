@@ -34,7 +34,7 @@ class CommonButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
-          side: const BorderSide(color: strokeColor, width: 1.2),
+          //side: const BorderSide(color: whiteColor, width: 1.2),
           borderRadius: BorderRadius.circular(borderRadius),
         ),
         backgroundColor: btnColor,

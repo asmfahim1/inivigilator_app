@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../utils/colors.dart';
-import 'common_icon_widget.dart';
 
 class BackButtonWidget extends StatelessWidget {
   const BackButtonWidget({Key? key}) : super(key: key);

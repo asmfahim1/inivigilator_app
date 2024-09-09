@@ -49,7 +49,7 @@ class CommonTextField extends StatelessWidget {
     this.labelLeftPadding = 0,
     this.labelBottomPadding = 0,
     this.labelFontSize = 14,
-    this.focusBorderColor = const Color(0xffD6DCFF),
+    this.focusBorderColor = textFieldBackgroundColor,
     this.minimizeBottomPadding = false,
     this.readOnly = false,
     this.enabled = true,
@@ -67,14 +67,14 @@ class CommonTextField extends StatelessWidget {
     this.isRequired = false,
     this.autofocus = false,
     this.labelText,
-    this.fillColor = silverGrayColor,
+    this.fillColor = textFieldBackgroundColor,
     this.isFilled = true,
     this.hintText,
     this.minLines,
     this.prefixIcon,
     this.obSecure = false,
     this.suffixIcon,
-    this.borderRadius = 4,
+    this.borderRadius = 8,
     this.onTap,
     this.margin = EdgeInsets.zero,
     this.keyboardType,
@@ -85,7 +85,7 @@ class CommonTextField extends StatelessWidget {
     this.textFieldKey,
     this.topPadding = 25,
     this.inputFormatters,
-    this.enableBorderColor = const Color(0xffFFFFFF),
+    this.enableBorderColor = textFieldBackgroundColor,
   });
 
   @override
@@ -147,26 +147,27 @@ class CommonTextField extends StatelessWidget {
               prefix: prefix,
               border: InputBorder.none,
               hintStyle: TextStyles.regular14.copyWith(
+                color: greyTextColor,
                 fontSize: hintSize,
               ),
-              errorStyle: const TextStyle(color: Colors.red),
-              focusColor: whiteColor,
+              errorStyle: const TextStyle(color: errorColor),
+              focusColor: textFieldBackgroundColor,
               focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: whiteColor),
+                borderSide: const BorderSide(color: textFieldBackgroundColor),
                 borderRadius: BorderRadius.circular(borderRadius!),
               ),
               contentPadding:
               EdgeInsets.fromLTRB(leftContentPadding!, topPadding!, 40, 0),
               enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: whiteColor),
+                borderSide: BorderSide(color: enableBorderColor!),
                 borderRadius: BorderRadius.circular(borderRadius!),
               ),
               focusedErrorBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: whiteColor),
+                borderSide: const BorderSide(color: textFieldBackgroundColor),
                 borderRadius: BorderRadius.circular(borderRadius!),
               ),
               errorBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.red),
+                borderSide: const BorderSide(color: errorColor),
                 borderRadius: BorderRadius.circular(borderRadius!),
               ),
               hintText: hintText,

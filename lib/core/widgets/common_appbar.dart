@@ -4,7 +4,6 @@ import 'package:invigilator_app/core/utils/dimensions.dart';
 import 'package:invigilator_app/core/widgets/text_widget.dart';
 import '../utils/colors.dart';
 import '../utils/styles.dart';
-import 'back_button.dart';
 
 class CommonAppbar extends StatelessWidget implements PreferredSizeWidget {
   const CommonAppbar({

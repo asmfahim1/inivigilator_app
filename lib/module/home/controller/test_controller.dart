@@ -70,7 +70,7 @@ class TestController extends GetxController {
         if (!isBusy.value) {
           isBusy.value = true;
           frame = image;
-          doFaceDetectionOnFrame(image);
+          doFaceDetectionOnFrame();
         }
       });
       isCameraInitialized.value = true;
@@ -88,39 +88,46 @@ class TestController extends GetxController {
     controller?.dispose();
     super.onClose();
   }
+  Future<void> doFaceDetectionOnFrame() async {
+    final inImg = getInputImage();
+    final faces = await faceDetector.processImage(inImg!);
 
-  Future<void> doFaceDetectionOnFrame(CameraImage image) async {
-    final inImg = _convertCameraImageToInputImage(image);
-    final faces = await faceDetector.processImage(inImg);
-    performFaceRecognition(faces, image);
+    performFaceRecognition(faces);
   }
 
-  InputImage _convertCameraImageToInputImage(CameraImage image) {
+  InputImage? getInputImage() {
     final WriteBuffer allBytes = WriteBuffer();
-    for (Plane plane in image.planes) {
+    for (final Plane plane in frame!.planes) {
       allBytes.putUint8List(plane.bytes);
     }
     final bytes = allBytes.done().buffer.asUint8List();
+    final Size imageSize =
+    Size(frame!.width.toDouble(), frame!.height.toDouble());
+    final camera = description;
+    final imageRotation =
+    InputImageRotationValue.fromRawValue(camera.sensorOrientation);
+    // if (imageRotation == null) return;
 
-    final inputImageData = InputImageData(
-      size: Size(image.width.toDouble(), image.height.toDouble()),
-      imageRotation: _rotationIntToImageRotation(
-          controller!.description.sensorOrientation),
-      inputImageFormat: InputImageFormatValue.fromRawValue(image.format.raw) ??
-          InputImageFormat.nv21,
-      planeData: image.planes.map((Plane plane) {
-        return InputImagePlaneMetadata(
-          bytesPerRow: plane.bytesPerRow,
-          height: plane.height,
-          width: plane.width,
-        );
-      }).toList(),
+    final inputImageFormat =
+    InputImageFormatValue.fromRawValue(frame!.format.raw);
+    // if (inputImageFormat == null) return null;
+
+    final planeData = frame!.planes.first;
+
+    final inputImageData = InputImageMetadata(
+      size: imageSize,
+      rotation: imageRotation!,
+      format: inputImageFormat!,
+      bytesPerRow: planeData.bytesPerRow,
     );
 
-    return InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
+    final inputImage =
+    InputImage.fromBytes(bytes: bytes, metadata: inputImageData);
+
+    return inputImage;
   }
 
-  InputImageRotation _rotationIntToImageRotation(int rotation) {
+/*  InputImageRotation _rotationIntToImageRotation(int rotation) {
     switch (rotation) {
       case 90:
         return InputImageRotation.rotation90deg;
@@ -131,14 +138,13 @@ class TestController extends GetxController {
       default:
         return InputImageRotation.rotation0deg;
     }
-  }
+  }*/
 
-  Future<void> performFaceRecognition(
-      List<Face> faces, CameraImage cameraImage) async {
+  Future<void> performFaceRecognition(List<Face> faces) async {
     scanResults.clear();
 
     // Convert CameraImage to Image and rotate it
-    image = convertYUV420ToImage(cameraImage);
+    image = convertYUV420ToImage(frame!);
     image = img.copyRotate(image!,
         angle: camDirec.value == CameraLensDirection.front ? 270 : 90);
 
@@ -162,17 +168,13 @@ class TestController extends GetxController {
       // Pass cropped face to face recognition model
       Recognition recognition = recognizer.recognize(croppedFace, faceRect);
 
-      // New logic to handle recognition
-      if (recognition.distance <= 1) {
-        // Stop the camera before showing the dialog
+      if (recognition.distance <= 1 && recognition.name != 'Unknown') {
         await stopCamera();
         showFaceRecognitionDialog(recognition);
         scanResults.add(recognition);
-        return; // Stop further processing
+        return;
       }
-      // else {
-      //   recognition.name = "Unknown";
-      // }
+
     }
 
     isBusy.value = false;
@@ -279,7 +281,7 @@ class TestController extends GetxController {
         if (!isBusy.value) {
           isBusy.value = true;
           frame = image;
-          doFaceDetectionOnFrame(image);
+          doFaceDetectionOnFrame();
         }
       });
     } else {

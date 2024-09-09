@@ -92,7 +92,7 @@ class Recognition512 {
 
   List<dynamic> imageToArray(img.Image inputImage) {
     img.Image resizedImage =
-    img.copyResize(inputImage!, width: WIDTH, height: HEIGHT);
+    img.copyResize(inputImage, width: WIDTH, height: HEIGHT);
     //List<double> flattenedList = flattenImageData(inputImage);
     List<double> flattenedList = resizedImage.data!
         .expand((channel) => [channel.r, channel.g, channel.b])

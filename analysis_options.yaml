@@ -2,8 +2,6 @@ include: package:flutter_lints/flutter.yaml
 linter:
   rules:
     public_member_api_docs: false
-    implicit-casts: false
-    implicit-dynamic: false
     sort_constructors_first: false
     constant_identifier_names: false
     avoid_positional_boolean_parameters: false

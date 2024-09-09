@@ -21,7 +21,7 @@ class ImagePickerWidget extends StatelessWidget {
         width: Dimensions.width100 * 1.55,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          border: Border.all(color: strokeColor),
+          border: Border.all(color: greyTextColor),
         ),
         child: SizedBox(
           height: Dimensions.height10 * 4.8,
