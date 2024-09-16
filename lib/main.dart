@@ -42,9 +42,9 @@ class MyApp extends StatelessWidget {
       locale: (PrefHelper.getLanguage() == 1)
           ? const Locale('en', 'US')
           : const Locale('bn', 'BD'),
-      themeMode: ThemeMode.system,
+      // themeMode: ThemeMode.system,
       theme: FAppTheme.lightTheme,
-      darkTheme: FAppTheme.darkTheme,
+      //darkTheme: FAppTheme.darkTheme,
       initialRoute: AppRoutes.splashScreen,
       getPages: AppRoutes.routes,
     );

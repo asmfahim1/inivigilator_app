@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:invigilator_app/core/utils/db_helper.dart';
+import 'package:invigilator_app/core/utils/dialogue_utils.dart';
 import 'package:invigilator_app/core/utils/string_resource.dart';
+import 'package:invigilator_app/module/home/model/face_detector_model.dart';
 import 'package:invigilator_app/module/home/repo/home_repo.dart';
 
 class HomeController extends GetxController{
@@ -23,6 +27,9 @@ class HomeController extends GetxController{
     try {
       final data = await dbHelper.getStudents();
       students.value = data;
+      print('Students list : ${students.length}');
+
+
     } catch (e) {
       print("Error fetching students: $e");
     }
@@ -32,15 +39,19 @@ class HomeController extends GetxController{
   Future<void> insertStudents() async {
     isStudentFetched(true);
     try {
-      if (await dbHelper.hasStudents()) {
-        await dbHelper.clearDatabase();
-      }
+      // if (await dbHelper.hasStudents()) {
+      //   await dbHelper.clearDatabase();
+      // }
+      //
+      // for (int i = 0; i < studentsList.length; i++) {
+      //   var student = studentsList[i];
+      //
+      //   // Convert the face_vector list to a JSON string
+      //   student['face_vector'] = jsonEncode(student['face_vector']);
+      //
+      //   await dbHelper.insertStudent(student as Map<String, dynamic>);
+      // }
 
-      for (var student in studentsList) {
-        var faceVectorString = (student['face_vector']).join(',');
-        student['face_vector'] = faceVectorString; // Convert list to comma-separated string
-        await dbHelper.insertStudent(student);
-      }
       fetchStudents();
 
     } catch (error) {
@@ -67,4 +78,55 @@ class HomeController extends GetxController{
     }
   }
 
+
+  Rx<FaceDetectModel> faceVectorModel = FaceDetectModel().obs;
+  Future<void> loadStudentFaceData() async {
+    try {
+      DialogUtils.showLoading(title: 'Fetching data...');
+      final response = await homeRepo!.getAllFaceVectors();
+
+      if (kDebugMode) {
+        print('Response body: ${response.body}');
+      }
+
+      if (response.statusCode == 200) {
+        if (await dbHelper.hasStudents()) {
+          await dbHelper.clearDatabase();
+        }
+
+        faceVectorModel.value = FaceDetectModel.fromJson(response.body);
+        for (int i = 0; i < faceVectorModel.value.data!.length; i++) {
+          var students = faceVectorModel.value.data![i];
+          for (int j = 0; j < students.studentsFaceVector!.length; j++) {
+            final faceVectors = students.studentsFaceVector![j];
+
+            // Parse the face vector string as a list of doubles
+            List<double> faceEmbedding = List<double>.from(jsonDecode(faceVectors.faceVector!).map((x) => x as double));
+
+            // Insert into the database, encode the list of doubles as a JSON array
+            Map<String, dynamic> row = {
+              DatabaseHelper.studentId: students.id,
+              DatabaseHelper.student_name: "${students.name}_${students.id}_$j",
+              DatabaseHelper.columnEmbedding: jsonEncode(faceEmbedding),  // Store as a JSON array of doubles
+            };
+
+            final id = await dbHelper.insert(row);
+            print('Data Inserted in row : $id');
+          }
+        }
+
+        DialogUtils.closeLoading();
+
+      } else {
+        DialogUtils.closeLoading();
+        throw Exception('Failed to load students');
+      }
+    } catch (e) {
+      DialogUtils.closeLoading();
+      if (kDebugMode) {
+        print('Error loading students data: $e');
+      }
+      throw Exception('Failed to load students $e');
+    }
+  }
 }

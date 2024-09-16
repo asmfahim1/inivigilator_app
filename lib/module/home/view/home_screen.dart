@@ -10,7 +10,7 @@ import '../controller/home_controller.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
 
-  final home = Get.find<HomeController>();
+  final homeController = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -75,11 +75,11 @@ class HomeScreen extends StatelessWidget {
               ),
               TextWidget(
                 'Invigilator\'s id: 147852330011',
-                style: TextStyles.title16,
+                style: TextStyles.regular14,
               ),
               TextWidget(
                 'exam : BCS exam',
-                style: TextStyles.title16,
+                style: TextStyles.regular12,
               ),
             ],
           ),
@@ -104,7 +104,11 @@ class HomeScreen extends StatelessWidget {
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: (){
-                Get.toNamed(AppRoutes.studentInfoScreen);
+
+                homeController.loadStudentFaceData().whenComplete((){
+                  Get.toNamed(AppRoutes.studentInfoScreen);
+                });
+
               },
               child: Card(
                 shape: RoundedRectangleBorder(

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
@@ -38,14 +39,10 @@ class Recognizer {
     final allRows = await dbHelper.queryAllRows();
     // debugPrint('query all rows:');
     for (final row in allRows) {
-      print(row[DatabaseHelper.student_name]);
+      print("------------${row[DatabaseHelper.student_name]}-------------");
       // String studentId = row[DatabaseHelper.studentId];
       String name = row[DatabaseHelper.student_name];
-      List<double> embd = row[DatabaseHelper.columnEmbedding]
-          .split(',')
-          .map((e) => double.parse(e))
-          .toList()
-          .cast<double>();
+      List<double> embd =  List<double>.from(jsonDecode(row[DatabaseHelper.columnEmbedding]) as Iterable);
       Recognition recognition =
       Recognition("${row[DatabaseHelper.student_name]}_${row[DatabaseHelper.studentId]}", Rect.zero, embd, 0);
       registered.putIfAbsent(name, () => recognition);
@@ -134,6 +131,7 @@ class Recognizer {
         distance += diff * diff;
       }
       distance = sqrt(distance);
+      print('==============$distance===============');
       if (pair.distance == -5 || distance < pair.distance) {
         pair.distance = distance;
         pair.name = name;

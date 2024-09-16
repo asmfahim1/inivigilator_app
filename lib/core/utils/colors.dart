@@ -57,16 +57,6 @@ const Color lightDividerColor = Color(0xFFBDBDBD); // Light gray
 const Color darkDividerColor = Color(0xFF4A4A4A); // White
 
 
-
-// Home screen colors
-const Color todayIconColor = Color(0xFF737D00); // Light gray
-const Color todayIconBackgroundColor = Color(0xFFFBFEEB); // Light gray
-const Color onShiftColor = Color(0xFFF0FBFF);
-const Color onBreakColor = Color(0xFFFFF9E6);
-const Color lateColor = Color(0xFFFEF5EE);
-const Color scheduledColor = Color(0xFFF9F9FB);
-
-
 //gradient color
 const Gradient linerGradientColor = LinearGradient(
   begin: Alignment.topLeft,

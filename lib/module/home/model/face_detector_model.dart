@@ -1,53 +1,77 @@
 import 'dart:convert';
 
-class Descriptor {
-  final String path;
-  final List<double> descriptor;
+FaceDetectModel faceDetectModelFromJson(String str) => FaceDetectModel.fromJson(json.decode(str));
 
-  Descriptor({required this.path, required this.descriptor});
+String faceDetectModelToJson(FaceDetectModel data) => json.encode(data.toJson());
 
-  factory Descriptor.fromJson(Map<String, dynamic> json) {
-    return Descriptor(
-      path: json['path'],
-      descriptor: List<double>.from(json['descriptor'].map((x) => x.toDouble())),
-    );
-  }
+class FaceDetectModel {
+  List<Datum>? data;
+
+  FaceDetectModel({
+    this.data,
+  });
+
+  factory FaceDetectModel.fromJson(Map<String, dynamic> json) => FaceDetectModel(
+    data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
+  };
 }
 
-class Employee {
-  final int id;
-  final String user;
-  final List<Descriptor> descriptors;
+class Datum {
+  int? id;
+  String? name;
+  String? email;
+  List<StudentsFaceVector>? studentsFaceVector;
 
-  Employee({required this.id, required this.user, required this.descriptors});
+  Datum({
+    this.id,
+    this.name,
+    this.email,
+    this.studentsFaceVector,
+  });
 
-  factory Employee.fromJson(Map<String, dynamic> json) {
-    var list = jsonDecode(json['descriptors']) as List;
-    List<Descriptor> descriptorList = list.map((i) => Descriptor.fromJson(i)).toList();
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+    id: json["id"],
+    name: json["name"],
+    email: json["email"],
+    studentsFaceVector: json["studentsFaceVector"] == null ? [] : List<StudentsFaceVector>.from(json["studentsFaceVector"]!.map((x) => StudentsFaceVector.fromJson(x))),
+  );
 
-    return Employee(
-      id: json['id'],
-      user: json['user'],
-      descriptors: descriptorList,
-    );
-  }
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name": name,
+    "email": email,
+    "studentsFaceVector": studentsFaceVector == null ? [] : List<dynamic>.from(studentsFaceVector!.map((x) => x.toJson())),
+  };
 }
 
-class ApiResponse {
-  final int statusCode;
-  final String message;
-  final List<Employee> data;
+class StudentsFaceVector {
+  int? id;
+  String? faceVector;
+  int? studentId;
+  DateTime? createAt;
 
-  ApiResponse({required this.statusCode, required this.message, required this.data});
+  StudentsFaceVector({
+    this.id,
+    this.faceVector,
+    this.studentId,
+    this.createAt,
+  });
 
-  factory ApiResponse.fromJson(Map<String, dynamic> json) {
-    var list = json['data'] as List;
-    List<Employee> employeeList = list.map((i) => Employee.fromJson(i)).toList();
+  factory StudentsFaceVector.fromJson(Map<String, dynamic> json) => StudentsFaceVector(
+    id: json["id"],
+    faceVector: json["faceVector"],
+    studentId: json["studentId"],
+    createAt: json["createAt"] == null ? null : DateTime.parse(json["createAt"]),
+  );
 
-    return ApiResponse(
-      statusCode: json['status_code'],
-      message: json['message'],
-      data: employeeList,
-    );
-  }
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "faceVector": faceVector,
+    "studentId": studentId,
+    "createAt": createAt?.toIso8601String(),
+  };
 }

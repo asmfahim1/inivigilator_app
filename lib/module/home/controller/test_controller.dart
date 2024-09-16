@@ -83,6 +83,8 @@ class TestController extends GetxController {
     }
   }
 
+
+
   @override
   void onClose() {
     controller?.dispose();

@@ -34,16 +34,23 @@ class DatabaseHelper {
 
   // SQL code to create the database table
   Future _onCreate(Database db, int version) async {
-    await db.execute('''
+    // await db.execute('''
+    //   CREATE TABLE $tableName (
+    //     $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+    //     $studentId TEXT,
+    //     $student_name TEXT,
+    //     // $exam_id TEXT,
+    //     // $exam_name TEXT,
+    //     $columnEmbedding TEXT,
+    //     // $created_at TEXT,
+    //     // $updated_at TEXT
+    //   )
+      await db.execute('''
       CREATE TABLE $tableName (
         $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
-        $studentId TEXT,
+        $studentId INTEGER,
         $student_name TEXT,
-        $exam_id TEXT,
-        $exam_name TEXT,
-        $columnEmbedding TEXT,
-        $created_at TEXT,
-        $updated_at TEXT
+        $columnEmbedding TEXT
       )
     ''');
     await db.execute('''
@@ -67,7 +74,6 @@ class DatabaseHelper {
   }
 
   Future<List<Map<String, dynamic>>> getStudents() async {
-    //var dbClient = await db;
     return await _db.query(tableName);
   }
 

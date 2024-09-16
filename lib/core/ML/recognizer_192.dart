@@ -25,7 +25,7 @@ class Recognition512 {
       _interpreterOptions.threads = numThreads;
     }
     loadModel().then((_) {
-      loadRegisteredFaces();
+      // loadRegisteredFaces();
     });
   }
 
@@ -34,53 +34,53 @@ class Recognition512 {
   //
   // }
 
-  final String bearerToken =
-      'Ez6ChKkntsIiWjjb1MCxLerwCqW4q6t1eN7fSeSM';
-  Future<ApiResponse> fetchEmployees() async {
-    final url = Uri.parse(
-        'https://grypas.inflack.xyz/grypas-api/api/v1/employee/trained'); // Replace with your API endpoint
-    final headers = {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer $bearerToken"
-    };
-    final body = jsonEncode({
-      "type": "",
-      "customer_id": 19
-    });
-    final response = await http.post(url, headers: headers, body: body);
+  // final String bearerToken =
+  //     'Ez6ChKkntsIiWjjb1MCxLerwCqW4q6t1eN7fSeSM';
+  // Future<ApiResponse> fetchEmployees() async {
+  //   final url = Uri.parse(
+  //       'https://grypas.inflack.xyz/grypas-api/api/v1/employee/trained'); // Replace with your API endpoint
+  //   final headers = {
+  //     "Content-Type": "application/json",
+  //     "Authorization": "Bearer $bearerToken"
+  //   };
+  //   final body = jsonEncode({
+  //     "type": "",
+  //     "customer_id": 19
+  //   });
+  //   final response = await http.post(url, headers: headers, body: body);
+  //
+  //   print('-------- response from api : ${response.body}');
+  //
+  //   if (response.statusCode == 200) {
+  //     return ApiResponse.fromJson(jsonDecode(response.body));
+  //   } else {
+  //     throw Exception('Failed to load employees');
+  //   }
+  // }
 
-    print('-------- response from api : ${response.body}');
-
-    if (response.statusCode == 200) {
-      return ApiResponse.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to load employees');
-    }
-  }
-
-  void loadRegisteredFaces() async {
-    ApiResponse apiResponse = await fetchEmployees();
-
-    print('--------- response stored --------');
-    for (int i = 0; i < apiResponse.data.length; i++) {
-      final employee = apiResponse.data[i];
-      for (int j = 0; j < employee.descriptors.length; j++) {
-        final descriptor = employee.descriptors[j];
-
-        try {
-          List<double> embd = descriptor.descriptor.map((e) => e.toDouble()).toList();
-          print('Parsed name: ${employee.user}_$j');
-          print('Parsed Embeddings: ${embd.length}');
-
-          RecognitionV2 recognizerV2 = RecognitionV2(employee.id, "${employee.user}_$j", Rect.zero, embd, 0);
-          registered.putIfAbsent(employee.user, () => recognizerV2);
-
-        } catch (e) {
-          print('Error parsing descriptor for ${employee.user}: $e');
-        }
-      }
-    }
-  }
+  // void loadRegisteredFaces() async {
+  //   ApiResponse apiResponse = await fetchEmployees();
+  //
+  //   print('--------- response stored --------');
+  //   for (int i = 0; i < apiResponse.data.length; i++) {
+  //     final employee = apiResponse.data[i];
+  //     for (int j = 0; j < employee.descriptors.length; j++) {
+  //       final descriptor = employee.descriptors[j];
+  //
+  //       try {
+  //         List<double> embd = descriptor.descriptor.map((e) => e.toDouble()).toList();
+  //         print('Parsed name: ${employee.user}_$j');
+  //         print('Parsed Embeddings: ${embd.length}');
+  //
+  //         RecognitionV2 recognizerV2 = RecognitionV2(employee.id, "${employee.user}_$j", Rect.zero, embd, 0);
+  //         registered.putIfAbsent(employee.user, () => recognizerV2);
+  //
+  //       } catch (e) {
+  //         print('Error parsing descriptor for ${employee.user}: $e');
+  //       }
+  //     }
+  //   }
+  // }
 
   Future<void> loadModel() async {
     try {
