@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:camera/camera.dart';
-import 'package:invigilator_app/core/ML/Recognition.dart';
+import 'package:invigilator_app/core/ML/recognition_v2.dart';
 import 'package:invigilator_app/core/utils/app_routes.dart';
 import 'package:invigilator_app/core/utils/colors.dart';
 import 'package:invigilator_app/core/utils/dimensions.dart';
@@ -88,7 +88,7 @@ class FaceDetectorPainter extends CustomPainter {
   FaceDetectorPainter(this.absoluteImageSize, this.faces, this.camDirec);
 
   final Size absoluteImageSize;
-  final List<Recognition> faces;
+  final List<RecognitionV2> faces;
   final CameraLensDirection camDirec;
 
   @override
@@ -101,7 +101,7 @@ class FaceDetectorPainter extends CustomPainter {
       ..strokeWidth = 2.0
       ..color = Colors.indigoAccent;
 
-    for (Recognition face in faces) {
+    for (RecognitionV2 face in faces) {
       canvas.drawRect(
         Rect.fromLTRB(
           camDirec == CameraLensDirection.front
@@ -134,28 +134,3 @@ class FaceDetectorPainter extends CustomPainter {
     return true;
   }
 }
-
-/*Card(
-margin: const EdgeInsets.only(left: 20, right: 20),
-color: secondaryColor,
-child: Center(
-child: Container(
-child: Row(
-mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-children: [
-TextWidget('End session', style: TextStyles.regular16.copyWith(fontWeight: FontWeight.bold, color: whiteColor),),
-IconButton(
-icon: const Icon(
-Icons.cached,
-color: Colors.white,
-),
-iconSize: 40,
-onPressed: () {
-testController.toggleCameraDirection();
-},
-),
-],
-),
-),
-),
-),*/

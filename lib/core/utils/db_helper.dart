@@ -18,14 +18,29 @@ class DatabaseHelper {
   static const created_at = 'created_at';
   static const updated_at = 'updated_at';
 
-  late Database _db;
+  // Static instance, initialized once and shared across the entire app
+  static final DatabaseHelper _instance = DatabaseHelper._internal();
 
+  // Factory constructor returns the same instance every time
+  factory DatabaseHelper() => _instance;
+
+  // Private constructor, so no one can instantiate DatabaseHelper directly
+  DatabaseHelper._internal();
+
+  static Database? _db;
+
+  // Method to access the database
+  Future<Database> get database async {
+    if (_db != null) return _db!;
+    _db = await init();
+    return _db!;
+  }
 
   // this opens the database (and creates it if it doesn't exist)
-  Future<void> init() async {
+  Future<Database> init() async {
     final documentsDirectory = await getApplicationDocumentsDirectory();
     final path = join(documentsDirectory.path, _databaseName);
-    _db = await openDatabase(
+    return _db = await openDatabase(
       path,
       version: _databaseVersion,
       onCreate: _onCreate,
@@ -34,17 +49,6 @@ class DatabaseHelper {
 
   // SQL code to create the database table
   Future _onCreate(Database db, int version) async {
-    // await db.execute('''
-    //   CREATE TABLE $tableName (
-    //     $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
-    //     $studentId TEXT,
-    //     $student_name TEXT,
-    //     // $exam_id TEXT,
-    //     // $exam_name TEXT,
-    //     $columnEmbedding TEXT,
-    //     // $created_at TEXT,
-    //     // $updated_at TEXT
-    //   )
       await db.execute('''
       CREATE TABLE $tableName (
         $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -65,26 +69,23 @@ class DatabaseHelper {
 
   //insert
   Future<int> insert(Map<String, dynamic> row) async {
-    return await _db.insert(tableName, row);
+    return await _db!.insert(tableName, row);
   }
 
   Future<int> insertStudent(Map<String, dynamic> student) async {
-    //var dbClient = await db;
-    return await _db.insert(tableName, student);
+    return await _db!.insert(tableName, student);
   }
 
   Future<List<Map<String, dynamic>>> getStudents() async {
-    return await _db.query(tableName);
+    return await _db!.query(tableName);
   }
 
   Future<int> clearDatabase() async {
-    //var dbClient = await db;
-    return await _db.delete(tableName);
+    return await _db!.delete(tableName);
   }
 
   Future<bool> hasStudents() async {
-    //var dbClient = await db;
-    var result = await _db.rawQuery('SELECT COUNT(*) FROM $tableName');
+    var result = await _db!.rawQuery('SELECT COUNT(*) FROM $tableName');
     int count = Sqflite.firstIntValue(result)!;
     return count > 0;
   }
@@ -92,18 +93,18 @@ class DatabaseHelper {
 
   //get all rows
   Future<List<Map<String, dynamic>>> queryAllRows() async {
-    return await _db.query(tableName);
+    return await _db!.query(tableName);
   }
 
   // raw SQL commands. This method uses a raw query to give the row count.
   Future<int> queryRowCount() async {
-    final results = await _db.rawQuery('SELECT COUNT(*) FROM $tableName');
+    final results = await _db!.rawQuery('SELECT COUNT(*) FROM $tableName');
     return Sqflite.firstIntValue(results) ?? 0;
   }
 
 
   Future<bool> isNameAlreadyPresent(String name) async {
-    var result = await _db.query(
+    var result = await _db!.query(
       attendanceRecordTable,
       where: 'name = ?',
       whereArgs: [name],
@@ -114,13 +115,13 @@ class DatabaseHelper {
 
   Future<int> insertAttendanceRecord(Map<String, dynamic> record) async {
     if (record['name'] == 'Unknown') {
-      return -1; // Return a value indicating failure or handle appropriately
+      return -1;
     } else {
-      return await _db.insert(attendanceRecordTable, record);
+      return await _db!.insert(attendanceRecordTable, record);
     }
   }
 
   Future<List<Map<String, dynamic>>> getAllAttendedStudent() async {
-    return await _db.query(attendanceRecordTable);
+    return await _db!.query(attendanceRecordTable);
   }
 }

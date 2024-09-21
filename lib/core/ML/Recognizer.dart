@@ -1,14 +1,11 @@
 import 'dart:convert';
 import 'dart:math';
-import 'dart:typed_data';
 import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as img;
+import 'package:invigilator_app/core/ML/recognition_v2.dart';
 import 'package:invigilator_app/core/utils/db_helper.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
-
-import 'Recognition.dart';
 
 class Recognizer {
   late Interpreter interpreter;
@@ -16,7 +13,7 @@ class Recognizer {
   static const int WIDTH = 112;
   static const int HEIGHT = 112;
   final dbHelper = DatabaseHelper();
-  Map<String, Recognition> registered = Map();
+  Map<String, RecognitionV2> registered = {};
   String get modelName => 'assets/trainned_model/mobile_face_net.tflite';
 
   Recognizer({int? numThreads}) {
@@ -39,12 +36,14 @@ class Recognizer {
     final allRows = await dbHelper.queryAllRows();
     // debugPrint('query all rows:');
     for (final row in allRows) {
-      print("------------${row[DatabaseHelper.student_name]}-------------");
+      if (kDebugMode) {
+        print("------------${row[DatabaseHelper.student_name]}-------------");
+      }
       // String studentId = row[DatabaseHelper.studentId];
       String name = row[DatabaseHelper.student_name];
       List<double> embd =  List<double>.from(jsonDecode(row[DatabaseHelper.columnEmbedding]) as Iterable);
-      Recognition recognition =
-      Recognition("${row[DatabaseHelper.student_name]}_${row[DatabaseHelper.studentId]}", Rect.zero, embd, 0);
+      RecognitionV2 recognition =
+      RecognitionV2(row[DatabaseHelper.studentId],"${row[DatabaseHelper.student_name]}_${row[DatabaseHelper.studentId]}", Rect.zero, embd, 0);
       registered.putIfAbsent(name, () => recognition);
       if (kDebugMode) {
         print("R = $name");
@@ -58,7 +57,9 @@ class Recognizer {
       DatabaseHelper.columnEmbedding: embedding.join(",")
     };
     final id = await dbHelper.insert(row);
-    print('inserted row id: $id');
+    if (kDebugMode) {
+      print('inserted row id: $id');
+    }
     loadRegisteredFaces();
   }
 
@@ -66,7 +67,10 @@ class Recognizer {
     try {
       interpreter = await Interpreter.fromAsset(modelName);
     } catch (e) {
-      print('Unable to create interpreter, Caught Exception: ${e.toString()}');
+      if (kDebugMode) {
+        print(
+            'Unable to create interpreter, Caught Exception: ${e.toString()}');
+      }
     }
   }
 
@@ -95,10 +99,9 @@ class Recognizer {
     return reshapedArray.reshape([1, 112, 112, 3]);
   }
 
-  Recognition recognize(img.Image image, Rect location) {
+  RecognitionV2 recognize(img.Image image, Rect location) {
     //TODO crop face from image resize it and convert it to float array
     var input = imageToArray(image);
-    print(input.shape.toString());
 
     //TODO output array
     List output = List.filled(1 * 192, 0).reshape([1, 192]);
@@ -107,23 +110,27 @@ class Recognizer {
     final runs = DateTime.now().millisecondsSinceEpoch;
     interpreter.run(input, output);
     final run = DateTime.now().millisecondsSinceEpoch - runs;
-    print('=======Time to run inference: $run ms$output==========');
+    // print('=======Time to run inference: $run ms ==========');
 
     //TODO convert dynamic list to double list
     List<double> outputArray = output.first.cast<double>();
 
-    //TODO looks for the nearest embeeding in the database and returns the pair
+    //TODO looks for the nearest embedding in the database and returns the pair
     Pair pair = findNearest(outputArray);
-    print("distance= ${pair.distance}");
 
-    return Recognition(pair.name, location, outputArray, pair.distance);
+    return RecognitionV2(
+        pair.id, pair.name, location, outputArray, pair.distance);
   }
 
-  //TODO  looks for the nearest embeeding in the database and returns the pair which contain information of registered face with which face is most similar
+  //TODO  looks for the nearest embedding in the database and returns the pair which contain information of registered face with which face is most similar
   findNearest(List<double> emb) {
-    Pair pair = Pair("Unknown", -5);
-    for (MapEntry<String, Recognition> item in registered.entries) {
+    Pair pair = Pair(0, "Unknown", -5);
+    for (MapEntry<String, RecognitionV2> item in registered.entries) {
+
+      // print('registered faces---------------------------------------- ${registered.length}\n');
+
       final String name = item.key;
+      final int id = item.value.id;
       List<double> knownEmb = item.value.embeddings;
       double distance = 0;
       for (int i = 0; i < emb.length; i++) {
@@ -131,10 +138,15 @@ class Recognizer {
         distance += diff * diff;
       }
       distance = sqrt(distance);
-      print('==============$distance===============');
+      if (kDebugMode) {
+        print('---Distance is : $distance Name : $name');
+      }
+
+
       if (pair.distance == -5 || distance < pair.distance) {
         pair.distance = distance;
         pair.name = name;
+        pair.id = id;
       }
     }
     return pair;
@@ -146,7 +158,8 @@ class Recognizer {
 }
 
 class Pair {
+  int id;
   String name;
   double distance;
-  Pair(this.name, this.distance);
+  Pair(this.id, this.name, this.distance);
 }

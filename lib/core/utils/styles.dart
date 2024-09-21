@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'colors.dart';
 
 class TextStyles {
-  static TextStyle title32 = GoogleFonts.poppins(
+  static TextStyle title32 = const TextStyle(
     fontWeight: FontWeight.w600,
     fontSize: 32,
     color: blackColor,
@@ -13,7 +12,7 @@ class TextStyles {
   static final title20 = title32.copyWith(fontSize: 20);
   static final title16 = title32.copyWith(fontSize: 16);
   static final regular18 = title32.copyWith(fontSize: 18);
-  static final regular16 = GoogleFonts.poppins(
+  static const regular16 = TextStyle(
     fontWeight: FontWeight.w400,
     fontSize: 16,
   );

@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
 import 'package:invigilator_app/core/ML/recognition_v2.dart';
 import 'package:invigilator_app/core/utils/db_helper.dart';
-import 'package:invigilator_app/module/home/model/face_detector_model.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 
 class Recognition512 {

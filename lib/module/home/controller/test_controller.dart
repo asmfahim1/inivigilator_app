@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image/image.dart' as img;
-import 'package:invigilator_app/core/ML/Recognition.dart';
 import 'package:invigilator_app/core/ML/Recognizer.dart';
+import 'package:invigilator_app/core/ML/recognition_v2.dart';
 import 'package:invigilator_app/core/utils/db_helper.dart';
 import 'package:invigilator_app/module/home/repo/test_repo.dart';
 
@@ -17,12 +17,13 @@ class TestController extends GetxController {
   final dbHelper = DatabaseHelper();
 
   CameraController? controller;
-  var isBusy = false.obs;
-  var isCameraInitialized = false.obs;
+  RxBool isBusy = false.obs;
+  RxBool isDialogueOpen = false.obs;
+  RxBool isCameraInitialized = false.obs;
   late Size size;
   late CameraDescription description;
   var camDirec = CameraLensDirection.front.obs;
-  var scanResults = <Recognition>[].obs;
+  var scanResults = <RecognitionV2>[].obs;
 
   // Declare face detector and recognizer
   late FaceDetector faceDetector;
@@ -30,7 +31,7 @@ class TestController extends GetxController {
 
   CameraImage? frame;
   img.Image? image;
-  var register = false.obs;
+  RxBool register = false.obs;
 
   @override
   void onInit() async {
@@ -43,6 +44,7 @@ class TestController extends GetxController {
 
   Future<void> initializeFaceDetector() async {
     var options = FaceDetectorOptions(
+      performanceMode: FaceDetectorMode.accurate,
       enableContours: true,
       enableClassification: true,
     );
@@ -67,7 +69,7 @@ class TestController extends GetxController {
 
       await controller!.initialize();
       controller!.startImageStream((image) {
-        if (!isBusy.value) {
+        if (!isBusy.value && !isDialogueOpen.value) {
           isBusy.value = true;
           frame = image;
           doFaceDetectionOnFrame();
@@ -83,17 +85,12 @@ class TestController extends GetxController {
     }
   }
 
-
-
-  @override
-  void onClose() {
-    controller?.dispose();
-    super.onClose();
-  }
   Future<void> doFaceDetectionOnFrame() async {
     final inImg = getInputImage();
     final faces = await faceDetector.processImage(inImg!);
-
+    // if (kDebugMode) {
+    //   print('--------$faces--------');
+    // }
     performFaceRecognition(faces);
   }
 
@@ -104,14 +101,14 @@ class TestController extends GetxController {
     }
     final bytes = allBytes.done().buffer.asUint8List();
     final Size imageSize =
-    Size(frame!.width.toDouble(), frame!.height.toDouble());
+        Size(frame!.width.toDouble(), frame!.height.toDouble());
     final camera = description;
     final imageRotation =
-    InputImageRotationValue.fromRawValue(camera.sensorOrientation);
+        InputImageRotationValue.fromRawValue(camera.sensorOrientation);
     // if (imageRotation == null) return;
 
     final inputImageFormat =
-    InputImageFormatValue.fromRawValue(frame!.format.raw);
+        InputImageFormatValue.fromRawValue(frame!.format.raw);
     // if (inputImageFormat == null) return null;
 
     final planeData = frame!.planes.first;
@@ -124,7 +121,7 @@ class TestController extends GetxController {
     );
 
     final inputImage =
-    InputImage.fromBytes(bytes: bytes, metadata: inputImageData);
+        InputImage.fromBytes(bytes: bytes, metadata: inputImageData);
 
     return inputImage;
   }
@@ -145,13 +142,11 @@ class TestController extends GetxController {
   Future<void> performFaceRecognition(List<Face> faces) async {
     scanResults.clear();
 
-    // Convert CameraImage to Image and rotate it
     image = convertYUV420ToImage(frame!);
     image = img.copyRotate(image!,
         angle: camDirec.value == CameraLensDirection.front ? 270 : 90);
 
     if (faces.isNotEmpty) {
-      // Find the closest face based on the size of the bounding box
       Face closestFace = faces.reduce((curr, next) {
         return (curr.boundingBox.height * curr.boundingBox.width) >
                 (next.boundingBox.height * curr.boundingBox.width)
@@ -160,23 +155,22 @@ class TestController extends GetxController {
       });
 
       Rect faceRect = closestFace.boundingBox;
-      // Crop the face
+
       img.Image croppedFace = img.copyCrop(image!,
           x: faceRect.left.toInt(),
           y: faceRect.top.toInt(),
           width: faceRect.width.toInt(),
           height: faceRect.height.toInt());
 
-      // Pass cropped face to face recognition model
-      Recognition recognition = recognizer.recognize(croppedFace, faceRect);
+      RecognitionV2 recognition = recognizer.recognize(croppedFace, faceRect);
 
       if (recognition.distance <= 1 && recognition.name != 'Unknown') {
-        await stopCamera();
+        isDialogueOpen.value = true;
+        // await stopCamera();
         showFaceRecognitionDialog(recognition);
         scanResults.add(recognition);
         return;
       }
-
     }
 
     isBusy.value = false;
@@ -237,7 +231,7 @@ class TestController extends GetxController {
     initializeCamera();
   }
 
-  void showFaceRecognitionDialog(Recognition recognition) {
+  void showFaceRecognitionDialog(RecognitionV2 recognition) {
     Get.defaultDialog(
       title: "Face Recognized",
       content: Column(
@@ -248,8 +242,10 @@ class TestController extends GetxController {
       ),
       confirm: ElevatedButton(
         onPressed: () async {
-          Get.back(); // Close the dialog
-          await resumeCameraPreview();
+          Get.back();
+          isDialogueOpen.value = false;
+          isBusy.value = false;
+          // await resumeCameraPreview();
           await insertAttendanceRecord(recognition);
         },
         child: const Text("OK"),
@@ -258,7 +254,7 @@ class TestController extends GetxController {
   }
 
   //db insertion and
-  Future<void> insertAttendanceRecord(Recognition recognition) async {
+  Future<void> insertAttendanceRecord(RecognitionV2 recognition) async {
     bool nameExists = await dbHelper.isNameAlreadyPresent(recognition.name);
     if (!nameExists) {
       // Insert data into attendance table
@@ -271,7 +267,7 @@ class TestController extends GetxController {
     }
   }
 
-  Future<void> resumeCameraPreview() async {
+/*  Future<void> resumeCameraPreview() async {
     if (kDebugMode) {
       print("Resuming camera preview...");
     }
@@ -306,5 +302,11 @@ class TestController extends GetxController {
         print("Camera controller is null");
       }
     }
+  }*/
+
+  @override
+  void onClose() {
+    controller?.dispose();
+    super.onClose();
   }
 }

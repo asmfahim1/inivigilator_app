@@ -32,11 +32,7 @@ class ApiClient extends GetConnect implements GetxService {
   Future<Response> getData(String uri, {Map<String, String>? headers}) async {
     try {
 
-      print('======${uri}');
-
       Response response = await get(Uri.encodeFull(uri), headers: headers ?? _mainHeaders);
-
-      print('===========response data : $response');
 
       return response;
     } catch (e) {
