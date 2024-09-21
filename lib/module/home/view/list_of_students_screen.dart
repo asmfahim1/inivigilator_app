@@ -48,6 +48,8 @@ class StudentsInfo extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.all(Dimensions.padding20,),
                 child: CommonButton(
+                  height: Dimensions.height10 * 5,
+                  width: Dimensions.screenWidth,
                   buttonColor: blueColor,
                   buttonTitle: 'Start detection',
                   onPressed: () {

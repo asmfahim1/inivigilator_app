@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:invigilator_app/core/utils/app_routes.dart';
 import 'package:invigilator_app/core/utils/const_key.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,28 +14,27 @@ class ApiClient extends GetConnect implements GetxService {
 
   ApiClient({required this.appBaseUrl, required this.sharedPreferences}) {
     baseUrl = appBaseUrl;
-
     timeout = const Duration(seconds: 30);
     token = sharedPreferences.getString(AppConstantKey.TOKEN.key) ?? '';
-    _mainHeaders = {
-      'Context-type': 'application/json; charset=UTF-8',
+    _mainHeaders = _createHeaders(token);
+  }
+
+  Map<String, String> _createHeaders(String token) {
+    final headers = {
+      'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
+    return headers;
   }
 
   void updateHeader(String token) {
-    _mainHeaders = {
-      'Context-type': 'application/json; charset=UTF-8',
-      'Authorization': 'Bearer $token',
-    };
+    _mainHeaders = _createHeaders(token);
   }
 
   Future<Response> getData(String uri, {Map<String, String>? headers}) async {
     try {
-
       Response response = await get(Uri.encodeFull(uri), headers: headers ?? _mainHeaders);
-
-      return response;
+      return _handleResponseStatus(response);
     } catch (e) {
       return Response(statusCode: 1, statusText: e.toString());
     }
@@ -42,10 +42,9 @@ class ApiClient extends GetConnect implements GetxService {
 
   Future<Response> postData(String uri, dynamic body) async {
     try {
-      Response response =
-          await post(uri, jsonEncode(body), headers: _mainHeaders);
+      Response response = await post(uri, jsonEncode(body), headers: _mainHeaders);
 
-      return response;
+      return _handleResponseStatus(response);
     } catch (e) {
       return Response(statusCode: 1, statusText: e.toString());
     }
@@ -53,9 +52,9 @@ class ApiClient extends GetConnect implements GetxService {
 
   Future<Response> putData(String uri, dynamic body) async {
     try {
-      Response response =
-          await put(uri, jsonEncode(body), headers: _mainHeaders);
-      return response;
+      Response response = await put(uri, jsonEncode(body), headers: _mainHeaders);
+
+      return _handleResponseStatus(response);
     } catch (e) {
       return Response(statusCode: 1, statusText: e.toString());
     }
@@ -90,16 +89,36 @@ class ApiClient extends GetConnect implements GetxService {
           },
         ),
       );
+      _handleResponseStatus(Response(
+        statusCode: response.statusCode,
+        statusText: response.statusMessage,
+      ));
+
       map = response.data;
-
       return map;
-    } on dio.DioException catch (error) {
-
-      throw 'Something Went Wrong $error';
-
+    } on dio.DioException {
+      throw 'Something Went Wrong';
     } catch (error) {
-
       throw 'Something Went Wrong';
     }
+  }
+
+  // Method to handle response status
+  dynamic _handleResponseStatus(Response response) {
+    switch (response.statusCode) {
+      case 401:
+        clearSharedData();
+        Get.offAllNamed(AppRoutes.loginScreen);
+        break;
+      default:
+        return response;
+    }
+  }
+
+  bool clearSharedData() {
+    sharedPreferences.remove(AppConstantKey.TOKEN.key);
+    token = '';
+    updateHeader('');
+    return true;
   }
 }

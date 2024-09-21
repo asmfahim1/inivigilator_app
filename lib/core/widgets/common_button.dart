@@ -31,17 +31,17 @@ class CommonButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color btnColor = buttonColor ?? primaryColor;
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          //side: const BorderSide(color: whiteColor, width: 1.2),
-          borderRadius: BorderRadius.circular(borderRadius),
+    return SizedBox(
+      height: height,
+      width: width,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(borderRadius),
+          ),
+          backgroundColor: btnColor,
         ),
-        backgroundColor: btnColor,
-      ),
-      onPressed: onPressed,
-      child: SizedBox(
-        height: height,
+        onPressed: onPressed,
         child: Center(
           child: TextWidget(
             buttonTitle,

@@ -65,14 +65,15 @@ class RecognitionScreen extends StatelessWidget {
                   left: 0,
                   width: Dimensions.screenWidth,
                   height: Dimensions.height100 * .8,
-                  child: CommonButton(
-                    height: Dimensions.height40,
-                    width: Dimensions.width180,
-                    buttonColor: blueColor,
-                    buttonTitle: 'Stop session',
-                    onPressed: () {
-                      Get.offNamed(AppRoutes.attendanceListScreen);
-                    },
+                  child: Padding(
+                    padding: EdgeInsets.all(Dimensions.padding10),
+                    child: CommonButton(
+                      buttonColor: blueColor,
+                      buttonTitle: 'Stop session',
+                      onPressed: () {
+                        Get.offNamed(AppRoutes.attendanceListScreen);
+                      },
+                    ),
                   ),
                 ),
               ],

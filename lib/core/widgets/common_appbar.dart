@@ -7,16 +7,18 @@ import '../utils/styles.dart';
 
 class CommonAppbar extends StatelessWidget implements PreferredSizeWidget {
   const CommonAppbar({
-    Key? key,
+    super.key,
     this.autoImply = true,
     this.centerTitle = true,
     this.title,
+    this.titleColor,
     this.flexibleSpace = const SizedBox(),
     this.actions = const [SizedBox()],
-  }) : super(key: key);
+  });
 
   final bool? autoImply;
   final String? title;
+  final Color? titleColor;
   final Widget flexibleSpace;
   final bool centerTitle;
   final List<Widget> actions;
@@ -26,7 +28,7 @@ class CommonAppbar extends StatelessWidget implements PreferredSizeWidget {
     return PreferredSize(
       preferredSize: const Size.fromHeight(56),
       child: AppBar(
-        backgroundColor: whiteColor,
+        backgroundColor: primaryColor,
         leading: autoImply!
             ? IconButton(
                 onPressed: () {
@@ -44,8 +46,8 @@ class CommonAppbar extends StatelessWidget implements PreferredSizeWidget {
             ? const SizedBox()
             : TextWidget(
                 title!,
-                style: TextStyles.regular18.copyWith(
-                  color: darkGrayColor,
+                style: TextStyles.title20.copyWith(
+                  color: titleColor ?? whiteColor,
                 ),
               ),
         flexibleSpace: flexibleSpace,

@@ -1,10 +1,16 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:invigilator_app/core/utils/colors.dart';
 import 'package:invigilator_app/core/utils/db_helper.dart';
 import 'package:invigilator_app/core/utils/dialogue_utils.dart';
 import 'package:invigilator_app/core/utils/string_resource.dart';
+import 'package:invigilator_app/core/utils/styles.dart';
+import 'package:invigilator_app/core/widgets/text_widget.dart';
 import 'package:invigilator_app/module/home/model/face_detector_model.dart';
 import 'package:invigilator_app/module/home/repo/home_repo.dart';
 
@@ -129,4 +135,47 @@ class HomeController extends GetxController{
       throw Exception('Failed to load students $e');
     }
   }
+
+  //for exit the app
+  Future<bool?> showWarningContext(BuildContext context) async => showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: TextWidget(
+        'Exit',
+        style: TextStyles.title20,
+      ),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: <Widget>[
+            TextWidget('Do you want to exit the app?'),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Get.back();
+          },
+          child: TextWidget(
+            'Cancel',
+            style: TextStyles.regular16.copyWith(color: redColor),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            if (Platform.isAndroid) {
+              SystemNavigator.pop();
+            } else if (Platform.isIOS) {
+              exit(0);
+            }
+          },
+          child: TextWidget(
+            'Yes',
+            style: TextStyles.regular16.copyWith(color: primaryColor),
+          ),
+        ),
+      ],
+    ),
+  );
+
 }

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:invigilator_app/core/utils/app_routes.dart';
 import 'package:invigilator_app/core/utils/dimensions.dart';
 import 'package:invigilator_app/core/widgets/exports.dart';
+import 'package:invigilator_app/core/widgets/sized_box_height_10.dart';
 import '../../../core/utils/colors.dart';
 import '../../../core/utils/styles.dart';
 import '../controller/home_controller.dart';
@@ -31,57 +32,58 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          _profileWidget(),
-          const SizedBoxHeight20(),
-          Expanded(child: _examRooms(),),
-        ],
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (shouldPop, dynamic) async {
+          await homeController.showWarningContext(context) ?? false;
+        },
+        child: Column(
+          children: [
+            _profileWidget(),
+            const SizedBoxHeight20(),
+            Expanded(child: _examRooms(),),
+          ],
+        ),
       ),
     );
   }
 
   Widget _profileWidget() {
     return Container(
-      height: Dimensions.height100 * 1.3,
       width: Dimensions.screenWidth,
-      padding: EdgeInsets.all(Dimensions.padding15),
-      margin: const EdgeInsets.all(8),
+      padding: EdgeInsets.symmetric(vertical: Dimensions.padding15),
       decoration: BoxDecoration(
-        color: Colors.grey.shade300,
-        border: Border.all(),
-        borderRadius: BorderRadius.circular(Dimensions.radius12),
+        color: primaryColor,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(Dimensions.radius20 * 1.5),
+          bottomRight: Radius.circular(Dimensions.radius20 * 1.5),
+        ),
       ),
-      child: Row(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CircleAvatar(
             backgroundColor: blueColor,
-            radius: Dimensions.radius20 + Dimensions.radius12,
-            child: Icon(
-              Icons.person,
-              size: Dimensions.iconSize20 * 2,
-              color: Colors.white,
+            radius: Dimensions.radius20 * 2,
+            backgroundImage: const NetworkImage(
+              'https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?size=626&ext=jpg&ga=GA1.1.559178150.1721198416&semt=sph',
             ),
           ),
-          SizedBox(width: Dimensions.width20,),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextWidget(
-                'ABC XYZ',
-                style: TextStyles.title16,
-              ),
-              TextWidget(
-                'Invigilator\'s id: 147852330011',
-                style: TextStyles.regular14,
-              ),
-              TextWidget(
-                'exam : BCS exam',
-                style: TextStyles.regular12,
-              ),
-            ],
+          const SizedBoxHeight10(),
+          TextWidget(
+            'Amaz Uddin Shaon',
+            style: TextStyles.title16.copyWith(fontSize: Dimensions.font10* 1.8, color: whiteColor),
+            overflow: TextOverflow.ellipsis,
+          ),
+          TextWidget(
+            'ID: 2254991056',
+            style: TextStyles.regular14.copyWith(color: whiteColor),
+            overflow: TextOverflow.ellipsis,
+          ),
+          TextWidget(
+            'amaz@gmail.com',
+            style: TextStyles.regular14.copyWith(color: whiteColor),
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

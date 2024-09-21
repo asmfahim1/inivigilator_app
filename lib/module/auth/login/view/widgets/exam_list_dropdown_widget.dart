@@ -28,7 +28,7 @@ class ExamDropdown extends StatelessWidget {
         }
 
         return Container(
-          height: Dimensions.height10 * 5.7,
+          height: Dimensions.height10 * 5,
           width: Dimensions.screenWidth,
           padding: EdgeInsets.only(left: Dimensions.padding10, right: Dimensions.padding10),
           alignment: Alignment.centerLeft,
