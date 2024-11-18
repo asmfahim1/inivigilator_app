@@ -5,6 +5,7 @@ import 'package:invigilator_app/core/utils/dimensions.dart';
 import 'package:invigilator_app/core/utils/exports.dart';
 import 'package:invigilator_app/core/widgets/exports.dart';
 import 'package:invigilator_app/module/home/controller/home_controller.dart';
+import 'package:invigilator_app/module/home/view/report_submit_screen.dart';
 import 'package:invigilator_app/module/home/view/widgets/candidate_info_list_tile_widget.dart';
 
 class StudentsInfo extends StatelessWidget {
@@ -19,6 +20,18 @@ class StudentsInfo extends StatelessWidget {
       appBar: CommonAppbar(
         showBackArrow: true,
         title: TextWidget('student_info_title'.tr, style: TextStyles.title20.copyWith(color: whiteColor),),
+        actions: [
+          IconButton(
+            onPressed: (){
+              Get.to(() => ReportCheatingScreen());
+            },
+            icon: Icon(
+              Icons.report,
+              color: whiteColor,
+              size: 25,
+            ),
+          ),
+        ],
       ),
       body: Obx(() {
         return Column(
