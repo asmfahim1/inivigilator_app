@@ -17,8 +17,8 @@ class AttendanceListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: CommonAppbar(
-        autoImply: true,
-        title: 'attended_student'.tr,
+        showBackArrow: true,
+        title: TextWidget('attended_student'.tr, style: TextStyles.title20.copyWith(color: whiteColor),),
         actions: [
           GestureDetector(
             onTap: () {},

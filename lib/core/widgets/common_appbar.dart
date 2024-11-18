@@ -1,63 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:invigilator_app/core/utils/dimensions.dart';
-import 'package:invigilator_app/core/widgets/text_widget.dart';
-import '../utils/colors.dart';
-import '../utils/styles.dart';
+import 'package:invigilator_app/core/utils/colors.dart';
 
 class CommonAppbar extends StatelessWidget implements PreferredSizeWidget {
+  final Widget? title;
+  final bool showBackArrow;
+  final bool centerTitle;
+  final IconData? leadingIcon;
+  final List<Widget>? actions;
+  final VoidCallback? leadingOnPressed;
+  final double elevation;
+
   const CommonAppbar({
     super.key,
-    this.autoImply = true,
-    this.centerTitle = true,
     this.title,
-    this.titleColor,
-    this.flexibleSpace = const SizedBox(),
-    this.actions = const [SizedBox()],
+    this.showBackArrow = false,
+    this.centerTitle = true,
+    this.leadingIcon,
+    this.leadingOnPressed,
+    this.actions,
+    this.elevation = 0,
   });
-
-  final bool? autoImply;
-  final String? title;
-  final Color? titleColor;
-  final Widget flexibleSpace;
-  final bool centerTitle;
-  final List<Widget> actions;
 
   @override
   Widget build(BuildContext context) {
-    return PreferredSize(
-      preferredSize: const Size.fromHeight(56),
-      child: AppBar(
-        backgroundColor: primaryColor,
-        leading: autoImply!
-            ? IconButton(
-                onPressed: () {
-                  Get.back();
-                },
-                icon: Icon(
-                  Icons.arrow_back_ios_new_outlined,
-                  size: Dimensions.iconSize25,
-                  color: primaryColor,
-                ),
-              )
-            : const SizedBox(),
-        centerTitle: centerTitle,
-        title: title == null
-            ? const SizedBox()
-            : TextWidget(
-                title!,
-                style: TextStyles.title20.copyWith(
-                  color: titleColor ?? whiteColor,
-                ),
+    return AppBar(
+      elevation: elevation,
+      automaticallyImplyLeading: false,
+      backgroundColor: primaryColor,
+      leading: showBackArrow
+          ? InkWell(
+        onTap: () => Get.back(),
+        child: const Icon(
+                Icons.arrow_back_ios,
+                color: whiteColor,
               ),
-        flexibleSpace: flexibleSpace,
-        elevation: 0,
-        automaticallyImplyLeading: autoImply!,
-        actions: actions,
-      ),
+            )
+          : leadingIcon != null
+          ? InkWell(
+        onTap: leadingOnPressed,
+        child: Icon(
+          leadingIcon,
+          color: whiteColor,
+        ),
+      )
+          : null,
+      centerTitle: centerTitle,
+      title: title,
+      actions: actions,
     );
   }
 
   @override
+  // TODO: implement preferredSize
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

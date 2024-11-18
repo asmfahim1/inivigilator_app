@@ -17,8 +17,8 @@ class StudentsInfo extends StatelessWidget {
     homeController.insertStudents();
     return Scaffold(
       appBar: CommonAppbar(
-        autoImply: true,
-        title: 'student_info_title'.tr,
+        showBackArrow: true,
+        title: TextWidget('student_info_title'.tr, style: TextStyles.title20.copyWith(color: whiteColor),),
       ),
       body: Obx(() {
         return Column(

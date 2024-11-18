@@ -17,8 +17,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppbar(
-        autoImply: false,
-        title: 'dashboard'.tr,
+        title: TextWidget('dashboard'.tr, style: TextStyles.title20.copyWith(color: whiteColor),),
         actions: [
           IconButton(
             onPressed: () {
@@ -107,9 +106,7 @@ class HomeScreen extends StatelessWidget {
             return GestureDetector(
               onTap: (){
 
-                homeController.loadStudentFaceData().whenComplete((){
-                  Get.toNamed(AppRoutes.studentInfoScreen);
-                });
+                Get.toNamed(AppRoutes.studentInfoScreen);
 
               },
               child: Card(

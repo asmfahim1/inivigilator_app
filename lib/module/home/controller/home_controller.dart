@@ -45,27 +45,49 @@ class HomeController extends GetxController{
   Future<void> insertStudents() async {
     isStudentFetched(true);
     try {
-      // if (await dbHelper.hasStudents()) {
-      //   await dbHelper.clearDatabase();
-      // }
-      //
-      // for (int i = 0; i < studentsList.length; i++) {
-      //   var student = studentsList[i];
-      //
-      //   // Convert the face_vector list to a JSON string
-      //   student['face_vector'] = jsonEncode(student['face_vector']);
-      //
-      //   await dbHelper.insertStudent(student as Map<String, dynamic>);
-      // }
+
+      final response = await homeRepo!.getAllFaceVectors();
+
+      if (kDebugMode) {
+        print('Response body: ${response.body}');
+      }
+
+      if (response.statusCode == 200) {
+        if (await dbHelper.hasStudents()) {
+          await dbHelper.clearDatabase();
+        }
+
+        faceVectorModel.value = FaceDetectModel.fromJson(response.body);
+        for (int i = 0; i < faceVectorModel.value.data!.length; i++) {
+          var students = faceVectorModel.value.data![i];
+          for (int j = 0; j < students.studentsFaceVector!.length; j++) {
+            final faceVectors = students.studentsFaceVector![j];
+
+            // Parse the face vector string as a list of doubles
+            List<double> faceEmbedding = List<double>.from(jsonDecode(faceVectors.faceVector!).map((x) => x as double));
+
+            // Insert into the database, encode the list of doubles as a JSON array
+            Map<String, dynamic> row = {
+              DatabaseHelper.studentId: students.id,
+              DatabaseHelper.student_name: "${students.name}_${students.id}_$j",
+              DatabaseHelper.columnEmbedding: jsonEncode(faceEmbedding),  // Store as a JSON array of doubles
+            };
+
+            final id = await dbHelper.insert(row);
+            print('Data Inserted in row : $id');
+          }
+        }
+      }
 
       fetchStudents();
 
+      isStudentFetched(false);
+
     } catch (error) {
+      isStudentFetched(false);
       if (kDebugMode) {
         print('=======Something went wrong====$error');
       }
-    } finally {
-      isStudentFetched(false);
     }
   }
 
