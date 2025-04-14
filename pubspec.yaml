@@ -23,6 +23,7 @@ dependencies:
   package_info_plus: ^8.0.2
   flutter_svg: ^2.0.10+1
   get: ^4.6.5
+  connectivity_plus: ^3.0.3
   dio: ^5.4.0
   camera: ^0.9.4+5
   sqflite: ^2.3.3+1
@@ -71,6 +72,16 @@ flutter:
         - asset: assets/fonts/Poppins-BoldItalic.ttf
           weight: 800
           style: italic
+    - family: HindSiliguri
+      fonts:
+        - asset: assets/fonts/HindSiliguri-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/HindSiliguri-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/HindSiliguri-Bold.ttf
+          weight: 800
+        - asset: assets/fonts/HindSiliguri-SemiBold.ttf
+          weight: 600
   
   
   

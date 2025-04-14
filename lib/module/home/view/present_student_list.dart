@@ -18,7 +18,10 @@ class AttendanceListScreen extends StatelessWidget {
     return Scaffold(
       appBar: CommonAppbar(
         showBackArrow: true,
-        title: TextWidget('attended_student'.tr, style: TextStyles.title20.copyWith(color: whiteColor),),
+        title: TextWidget(
+          'attended_student'.tr,
+          style: TextStyles.title20.copyWith(color: whiteColor),
+        ),
         actions: [
           GestureDetector(
             onTap: () {},
@@ -76,19 +79,20 @@ class AttendanceListScreen extends StatelessWidget {
                     )
                   : homeController.attendedStudents.isEmpty
                       ? Expanded(
-                        child: Center(
+                          child: Center(
                             child: TextWidget(
                               'empty_attendance_list'.tr,
                               style: TextStyles
                                   .regular16, // Customize the style as needed
                             ),
                           ),
-                      )
+                        )
                       : Expanded(
-                        child: AttendedStudentsListTile(
-                            attendedStudentList: homeController.attendedStudents,
+                          child: AttendedStudentsListTile(
+                            attendedStudentList:
+                                homeController.attendedStudents,
                           ),
-                      ),
+                        ),
             ],
           );
         }),

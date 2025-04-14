@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:invigilator_app/core/utils/api_client.dart';
 import 'package:invigilator_app/core/utils/app_constants.dart';
 import 'package:invigilator_app/module/auth/login/controller/login_controller.dart';
+import 'package:invigilator_app/module/auth/login/controller/network_controller.dart';
 import 'package:invigilator_app/module/auth/login/repo/login_repo.dart';
 import 'package:invigilator_app/module/home/controller/home_controller.dart';
 import 'package:invigilator_app/module/home/controller/test_controller.dart';
@@ -14,6 +15,8 @@ Future<void> init() async {
 
   //shared preference
   Get.lazyPut(() => sharedPreferences, fenix: true);
+
+  // Get.put<NetworkController>(NetworkController(), permanent: true);
 
   // api client
   Get.lazyPut(

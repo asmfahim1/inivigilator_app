@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:invigilator_app/core/widgets/text_widget.dart';
-
 import '../utils/colors.dart';
 import '../utils/styles.dart';
 
 class CommonButton extends StatelessWidget {
   const CommonButton({
-    Key? key,
+    super.key,
     required this.buttonTitle,
     this.onPressed,
-    this.height = 45,
-    this.width = 120,
-    this.fontSize = 16,
+    this.height,
+    this.width,
+    this.fontSize = 14,
     this.borderRadius = 6,
     this.buttonTextColor,
     this.fontWeight = FontWeight.w500,
     this.buttonColor,
-  }) : super(key: key);
+  });
 
   final String buttonTitle;
-  final double height;
+  final double? height;
   final VoidCallback? onPressed;
-  final double width;
+  final double? width;
   final double borderRadius;
   final Color? buttonColor;
   final Color? buttonTextColor;
@@ -31,21 +30,20 @@ class CommonButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color btnColor = buttonColor ?? primaryColor;
-    return SizedBox(
-      height: height,
-      width: width,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
-          ),
-          backgroundColor: btnColor,
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
-        onPressed: onPressed,
+        backgroundColor: btnColor,
+      ),
+      onPressed: onPressed,
+      child: SizedBox(
+        height: height,
+        width: width,
         child: Center(
           child: TextWidget(
             buttonTitle,
-            maxLines: 2,
             textAlign: TextAlign.center,
             style: TextStyles.title16.copyWith(
               color: buttonTextColor ?? whiteColor,

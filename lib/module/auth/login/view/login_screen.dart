@@ -25,7 +25,7 @@ class LoginScreen extends StatelessWidget {
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: Dimensions.padding20, vertical: Dimensions.padding20),
+            padding: EdgeInsets.symmetric(horizontal: Dimensions.padding15, vertical: Dimensions.padding15),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

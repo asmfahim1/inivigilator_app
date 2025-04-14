@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:invigilator_app/core/theme/custome_themes/appbar_theme.dart';
 import 'package:invigilator_app/core/theme/custome_themes/bottom_sheet_theme.dart';
@@ -8,13 +7,14 @@ import 'package:invigilator_app/core/theme/custome_themes/elevated_button_theme.
 import 'package:invigilator_app/core/theme/custome_themes/outline_button_theme.dart';
 import 'package:invigilator_app/core/theme/custome_themes/text_field_theme.dart';
 import 'package:invigilator_app/core/theme/custome_themes/text_theme.dart';
+import 'package:invigilator_app/core/utils/pref_helper.dart';
 
 class FAppTheme {
   FAppTheme._();
 
   static ThemeData lightTheme = ThemeData(
       useMaterial3: true,
-      fontFamily: 'Poppins',
+      fontFamily: PrefHelper.getLanguage() == 1 ? 'HindSiliguri' : 'Poppins',
       brightness: Brightness.light,
       primaryColor: Colors.blue,
       scaffoldBackgroundColor: Colors.white,
@@ -31,7 +31,7 @@ class FAppTheme {
       );
   static ThemeData darkTheme = ThemeData(
       useMaterial3: true,
-      fontFamily: 'Poppins',
+      fontFamily: PrefHelper.getLanguage() == 1 ? 'HindSiliguri' : 'Poppins',
       brightness: Brightness.dark,
       primaryColor: Colors.blue,
       scaffoldBackgroundColor: Colors.black,

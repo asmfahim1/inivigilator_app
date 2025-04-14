@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:invigilator_app/core/utils/app_routes.dart';
 import 'package:invigilator_app/core/utils/const_key.dart';
+import 'package:invigilator_app/core/utils/network_connectivity_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiClient extends GetConnect implements GetxService {
@@ -32,6 +33,9 @@ class ApiClient extends GetConnect implements GetxService {
   }
 
   Future<Response> getData(String uri, {Map<String, String>? headers}) async {
+    if (!await _checkInternetOrReturnError()) {
+      return const Response(statusCode: 0, statusText: "No internet connection");
+    }
     try {
       Response response = await get(Uri.encodeFull(uri), headers: headers ?? _mainHeaders);
       return _handleResponseStatus(response);
@@ -40,20 +44,28 @@ class ApiClient extends GetConnect implements GetxService {
     }
   }
 
+
   Future<Response> postData(String uri, dynamic body) async {
+    if (!await _checkInternetOrReturnError()) {
+      return const Response(statusCode: 0, statusText: "No internet connection");
+    }
+
     try {
       Response response = await post(uri, jsonEncode(body), headers: _mainHeaders);
-
       return _handleResponseStatus(response);
     } catch (e) {
       return Response(statusCode: 1, statusText: e.toString());
     }
   }
 
+
   Future<Response> putData(String uri, dynamic body) async {
+    if (!await _checkInternetOrReturnError()) {
+      return const Response(statusCode: 0, statusText: "No internet connection! \nPlease check your internet first.");
+    }
+
     try {
       Response response = await put(uri, jsonEncode(body), headers: _mainHeaders);
-
       return _handleResponseStatus(response);
     } catch (e) {
       return Response(statusCode: 1, statusText: e.toString());
@@ -63,6 +75,11 @@ class ApiClient extends GetConnect implements GetxService {
   Future<Map<String, dynamic>> uploadFileWithDio(
       String uri, File file, String fileName) async {
     Map<String, dynamic> map = {};
+
+    if (!await _checkInternetOrReturnError()) {
+      throw 'No internet connection';
+    }
+
     try {
 
       String completeUrl = '$baseUrl$uri';
@@ -113,6 +130,15 @@ class ApiClient extends GetConnect implements GetxService {
       default:
         return response;
     }
+  }
+
+
+  Future<bool> _checkInternetOrReturnError() async {
+    bool hasInternet = await NetworkConnection.instance.hasInternetConnection();
+    if (!hasInternet) {
+      Get.snackbar("No Internet", "Please check your internet connection.");
+    }
+    return hasInternet;
   }
 
   bool clearSharedData() {

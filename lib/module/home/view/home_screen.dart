@@ -33,17 +33,22 @@ class HomeScreen extends StatelessWidget {
       ),
       body: PopScope(
         canPop: false,
-        onPopInvokedWithResult: (shouldPop, dynamic) async {
-          await homeController.showWarningContext(context) ?? false;
+        onPopInvoked: (shouldPop) async {
+          final shouldProceed = await homeController.showWarningContext(context) ?? false;
+          if (shouldProceed) {
+            Navigator.pop(context); // Or any other logic to pop the screen
+          }
         },
         child: Column(
           children: [
             _profileWidget(),
-            const SizedBoxHeight20(),
-            Expanded(child: _examRooms(),),
+            const SizedBox(height: 20),
+            Expanded(child: _examRooms()),
           ],
         ),
       ),
+
+
     );
   }
 
