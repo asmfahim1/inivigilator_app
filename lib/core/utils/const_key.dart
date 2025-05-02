@@ -1,5 +1,7 @@
 enum AppConstantKey {
   USER_ID,
+  USER_INFO,
+  REGISTRATION,
   TOKEN,
   LANGUAGE,
   YYYY_MM_DD,
@@ -32,7 +34,6 @@ enum AppConstantKey {
   EN,
   BN,
   FONTFAMILY,
-
 }
 
 extension AppConstantExtention on AppConstantKey {
@@ -40,6 +41,10 @@ extension AppConstantExtention on AppConstantKey {
     switch (this) {
       case AppConstantKey.USER_ID:
         return "USER_ID";
+      case AppConstantKey.USER_INFO:
+        return "USER_INFO";
+      case AppConstantKey.REGISTRATION:
+        return "REGISTRATION";
       case AppConstantKey.TOKEN:
         return "TOKEN";
       case AppConstantKey.LANGUAGE:
@@ -58,6 +63,8 @@ extension AppConstantExtention on AppConstantKey {
         return "MMMM y";
       case AppConstantKey.MMM:
         return "MMM";
+      case AppConstantKey.MMM:
+        return "MMMM";
       case AppConstantKey.YYYY_MM:
         return 'yyyy-MM';
       case AppConstantKey.YYYY_MM_DD:
@@ -102,7 +109,6 @@ extension AppConstantExtention on AppConstantKey {
         return 'bn';
       case AppConstantKey.FONTFAMILY:
         return 'Arboria';
-
 
       default:
         return "";

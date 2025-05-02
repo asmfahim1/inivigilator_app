@@ -200,41 +200,4 @@ class HomeController extends GetxController{
       ],
     ),
   );
-
-
-  // cheating report controller
-  var name = ''.obs;
-  var rollNo = ''.obs;
-  var examName = 'Final Exam'.obs; // Example exam name
-  var imageFile = Rxn<File>();
-
-  final picker = ImagePicker();
-
-  Future<void> pickImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.camera);
-    if (pickedFile != null) {
-      imageFile.value = File(pickedFile.path);
-    }
-  }
-
-  void submitReport() {
-    if (name.isNotEmpty && rollNo.isNotEmpty && imageFile.value != null) {
-      Get.snackbar(
-        "Success",
-        "Report Submitted Successfully",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
-    } else {
-      Get.snackbar(
-        "Error",
-        "Please fill all details",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-    }
-  }
-
 }

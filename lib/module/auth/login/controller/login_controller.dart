@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:invigilator_app/core/utils/app_routes.dart';
 import 'package:invigilator_app/core/utils/dialogue_utils.dart';
-import 'package:invigilator_app/core/utils/extensions.dart';
 import 'package:invigilator_app/module/auth/login/model/all_exams_model.dart';
 import 'package:invigilator_app/module/auth/login/model/login_response_model.dart';
 import 'package:invigilator_app/module/auth/login/repo/login_repo.dart';
@@ -23,16 +23,14 @@ class LoginController extends GetxController {
 
   bool get passwordVisible => _passwordVisible.value;
 
-
   RxString examType = 'exams'.tr.obs;
   RxInt examId = 0.obs;
 
-
   void setSelectedValue(String examName) {
-    final exam = examList
-        .firstWhere((element) => element.name! == examName);
+    final exam = examList.firstWhere((element) => element.name! == examName);
     examType.value = exam.name!;
     examId.value = exam.id!;
+
     update();
   }
 
@@ -42,15 +40,12 @@ class LoginController extends GetxController {
     getAllExams();
   }
 
-
-
   RxBool isExamListLoaded = false.obs;
   RxList examList = <ExamNameList>[].obs;
   Future<void> getAllExams() async {
     try {
       isExamListLoaded.value = true; // Set loading state to true
       Response response = await loginRepo!.getAllExams();
-
 
       if (response.statusCode == 200) {
         var list = examNameListFromJson(response.bodyString!);
@@ -64,55 +59,58 @@ class LoginController extends GetxController {
     } finally {
       isExamListLoaded.value = false; // Set loading state to false
     }
-
     update();
   }
 
-
   Future<void> loginMethod() async {
-    LoginResponseModel responseModel;
     try {
-      DialogUtils.showLoading(title: "Please wait...");
+      LoginResponseModel responseModel;
+      DialogUtils.showLoading(title: 'please_wait'.tr);
 
       final Map<String, dynamic> map = <String, dynamic>{};
       map['email'] = email.text.trim();
       map['password'] = password.text.trim();
+      map['exam_id'] = examId.value;
 
       Response response = await loginRepo!.login(map);
 
       if (kDebugMode) {
-        print('Response and maps : ${response.statusCode} =====${response.body}=========$map');
+        print(
+            'Response and maps : ${response.statusCode} =====${response.body}=========$map');
       }
 
       closeLoading();
 
       if (response.statusCode == 200) {
-
         responseModel = LoginResponseModel.fromJson(response.body);
 
         if (responseModel.data == null) {
           DialogUtils.showErrorDialog(
-            title: 'Warning',
-            description: responseModel.message ?? 'No data found',
+            title: 'warning'.tr,
+            description: responseModel.message ?? 'no_data'.tr,
           );
         } else {
-          await loginRepo!.saveUserToken(responseModel.token.toString());
-          // Get.offAllNamed(AppRoutes.homeScreen);
+          await loginRepo!.saveUserToken(responseModel.token.toString(),
+              responseModel.data!.registretionDone!);
+
+          Get.offAllNamed(AppRoutes.homeScreen);
         }
       } else {
-        // Handle non-200 status code
         responseModel = LoginResponseModel.fromJson(response.body);
         DialogUtils.showErrorDialog(
-          title: 'Warning',
-          description: responseModel.message ?? 'Unknown error occurred',
+          title: 'warning'.tr,
+          description: responseModel.message ?? 'error_unknown'.tr,
         );
       }
     } catch (error) {
-      closeLoading(); // Ensure closeLoading() is called in case of an error
+      closeLoading();
 
       DialogUtils.showErrorDialog(description: "$error");
 
-      "There is an error occurred while login request is processing: $error".log();
+      if (kDebugMode) {
+        print(
+            "There is an error occurred while login request is processing: $error");
+      }
     }
   }
 
@@ -123,6 +121,10 @@ class LoginController extends GetxController {
   //is user logged in
   bool userLoggedIn() {
     return loginRepo!.userLoggedIn();
+  }
+
+  bool userLogOutMethod() {
+    return loginRepo!.userLoggedOut();
   }
 
   bool clearSharedData() {

@@ -21,16 +21,16 @@ class StudentsInfo extends StatelessWidget {
         showBackArrow: true,
         title: TextWidget('student_info_title'.tr, style: TextStyles.title20.copyWith(color: whiteColor),),
         actions: [
-          IconButton(
-            onPressed: (){
-              Get.to(() => ReportCheatingScreen());
-            },
-            icon: Icon(
-              Icons.report,
-              color: whiteColor,
-              size: 25,
-            ),
-          ),
+          // IconButton(
+          //   onPressed: (){
+          //     Get.to(() => ReportCheatingScreen());
+          //   },
+          //   icon: Icon(
+          //     Icons.report,
+          //     color: whiteColor,
+          //     size: 25,
+          //   ),
+          // ),
         ],
       ),
       body: Obx(() {

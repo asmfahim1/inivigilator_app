@@ -4,6 +4,7 @@ import 'package:invigilator_app/core/utils/app_routes.dart';
 import 'package:invigilator_app/core/utils/dimensions.dart';
 import 'package:invigilator_app/core/widgets/exports.dart';
 import 'package:invigilator_app/core/widgets/sized_box_height_10.dart';
+import 'package:invigilator_app/module/home/view/report_submit_screen.dart';
 import '../../../core/utils/colors.dart';
 import '../../../core/utils/styles.dart';
 import '../controller/home_controller.dart';
@@ -20,13 +21,23 @@ class HomeScreen extends StatelessWidget {
         title: TextWidget('dashboard'.tr, style: TextStyles.title20.copyWith(color: whiteColor),),
         actions: [
           IconButton(
+            onPressed: (){
+              Get.to(() => ReportCheatingScreen());
+            },
+            icon: Icon(
+              Icons.report,
+              color: whiteColor,
+              size: Dimensions.iconSize25,
+            ),
+          ),
+          IconButton(
             onPressed: () {
               Get.offAllNamed(AppRoutes.loginScreen);
             },
             icon: Icon(
               Icons.logout_outlined,
               color: redColor,
-              size: Dimensions.iconSize30,
+              size: Dimensions.iconSize25,
             ),
           ),
         ],
