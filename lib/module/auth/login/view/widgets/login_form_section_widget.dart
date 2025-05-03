@@ -17,6 +17,8 @@ class LoginFormSectionWidget extends StatelessWidget {
 
   final FocusNode _passwordFocus = FocusNode();
 
+  final LoginController login = Get.find<LoginController>();
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<LoginController>(builder: (controller) {
@@ -53,11 +55,11 @@ class LoginFormSectionWidget extends StatelessWidget {
                 controller: controller.password,
                 obSecure: controller.passwordVisible,
                 onFieldSubmitted: (v) {
-                  Get.toNamed(AppRoutes.homeScreen);
+                  // Get.toNamed(AppRoutes.homeScreen);
 
-                  // if (_formKey.currentState!.validate()) {
-                  //   login.loginMethod();
-                  // }
+                  if (_formKey.currentState!.validate()) {
+                    login.loginMethod();
+                  }
                 },
                 suffixIcon: IconButton(
                   color: blackColor,
@@ -77,10 +79,10 @@ class LoginFormSectionWidget extends StatelessWidget {
                 buttonColor: blueColor,
                 buttonTitle: 'login'.tr,
                 onPressed: () {
-                  Get.toNamed(AppRoutes.homeScreen);
-                  // if (_formKey.currentState!.validate()) {
-                  //   login.loginMethod();
-                  // }
+                  // Get.toNamed(AppRoutes.homeScreen);
+                  if (_formKey.currentState!.validate()) {
+                    login.loginMethod();
+                  }
                 },
               ),
             ],
