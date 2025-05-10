@@ -30,7 +30,10 @@ class CommonButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color btnColor = buttonColor ?? primaryColor;
-    return ElevatedButton(
+
+    // We can use Elevated button, textButton etc
+
+    return FilledButton(
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:invigilator_app/core/utils/app_routes.dart';
 import 'package:invigilator_app/core/utils/colors.dart';
 import 'package:invigilator_app/core/utils/dimensions.dart';
 import 'package:invigilator_app/core/utils/validator.dart';
@@ -56,7 +55,6 @@ class LoginFormSectionWidget extends StatelessWidget {
                 obSecure: controller.passwordVisible,
                 onFieldSubmitted: (v) {
                   // Get.toNamed(AppRoutes.homeScreen);
-
                   if (_formKey.currentState!.validate()) {
                     login.loginMethod();
                   }
@@ -75,6 +73,7 @@ class LoginFormSectionWidget extends StatelessWidget {
                 height: Dimensions.height15 * 2,
               ),
               CommonButton(
+                height: 45,
                 width: Dimensions.screenWidth,
                 buttonColor: blueColor,
                 buttonTitle: 'login'.tr,

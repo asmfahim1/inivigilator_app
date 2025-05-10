@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final loginResponseModel = loginResponseModelFromJson(jsonString);
+
 import 'dart:convert';
 
 LoginResponseModel loginResponseModelFromJson(String str) => LoginResponseModel.fromJson(json.decode(str));
@@ -5,10 +9,10 @@ LoginResponseModel loginResponseModelFromJson(String str) => LoginResponseModel.
 String loginResponseModelToJson(LoginResponseModel data) => json.encode(data.toJson());
 
 class LoginResponseModel {
-  final bool? ok;
-  final String? message;
-  final Data? data;
-  final String? token;
+  bool? ok;
+  String? message;
+  Data? data;
+  String? token;
 
   LoginResponseModel({
     this.ok,
@@ -33,28 +37,26 @@ class LoginResponseModel {
 }
 
 class Data {
-  final int? id;
-  final String? name;
-  final String? email;
-  final String? address;
-  final String? password;
-  final String? phone;
-  final bool? firstLogin;
-  final bool? registretionDone;
-  final bool? varify;
-  final DateTime? createAt;
-  final DateTime? updateAt;
+  int? id;
+  String? name;
+  String? positions;
+  String? email;
+  String? password;
+  String? phone;
+  String? address;
+  bool? firstLogin;
+  DateTime? createAt;
+  DateTime? updateAt;
 
   Data({
     this.id,
     this.name,
+    this.positions,
     this.email,
-    this.address,
     this.password,
     this.phone,
+    this.address,
     this.firstLogin,
-    this.registretionDone,
-    this.varify,
     this.createAt,
     this.updateAt,
   });
@@ -62,13 +64,12 @@ class Data {
   factory Data.fromJson(Map<String, dynamic> json) => Data(
     id: json["id"],
     name: json["name"],
+    positions: json["positions"],
     email: json["email"],
-    address: json["address"],
     password: json["password"],
     phone: json["phone"],
+    address: json["address"],
     firstLogin: json["first_login"],
-    registretionDone: json["registretionDone"],
-    varify: json["varify"],
     createAt: json["createAt"] == null ? null : DateTime.parse(json["createAt"]),
     updateAt: json["updateAt"] == null ? null : DateTime.parse(json["updateAt"]),
   );
@@ -76,13 +77,12 @@ class Data {
   Map<String, dynamic> toJson() => {
     "id": id,
     "name": name,
+    "positions": positions,
     "email": email,
-    "address": address,
     "password": password,
     "phone": phone,
+    "address": address,
     "first_login": firstLogin,
-    "registretionDone": registretionDone,
-    "varify": varify,
     "createAt": createAt?.toIso8601String(),
     "updateAt": updateAt?.toIso8601String(),
   };

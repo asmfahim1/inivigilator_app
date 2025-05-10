@@ -18,12 +18,18 @@ class LoginRepo {
     return await apiClient.postData(AppConstants.loginUrl, loginBody);
   }
 
-  saveUserToken(String token, bool registrationDone) async {
+  // saveUserToken(String token, bool registrationDone) async {
+  //   apiClient.token = token;
+  //   apiClient.updateHeader(token);
+  //
+  //   await sharedPreferences.setString(AppConstantKey.TOKEN.key, token);
+  //   await sharedPreferences.setBool(AppConstantKey.REGISTRATION.key, registrationDone);
+  // }
+
+  saveUserToken(String token) async {
     apiClient.token = token;
-    apiClient.updateHeader(token);
 
     await sharedPreferences.setString(AppConstantKey.TOKEN.key, token);
-    await sharedPreferences.setBool(AppConstantKey.REGISTRATION.key, registrationDone);
   }
 
   // Future<void> saveUserInfo(Map<String, dynamic> userInfo) async {

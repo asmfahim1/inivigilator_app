@@ -6,6 +6,7 @@ import 'package:invigilator_app/core/utils/app_routes.dart';
 import 'package:invigilator_app/core/utils/const_key.dart';
 import 'package:invigilator_app/core/utils/network_connectivity_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:developer';
 
 class ApiClient extends GetConnect implements GetxService {
   late String token;
@@ -21,11 +22,10 @@ class ApiClient extends GetConnect implements GetxService {
   }
 
   Map<String, String> _createHeaders(String token) {
-    final headers = {
+    return {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    return headers;
   }
 
   void updateHeader(String token) {
@@ -36,105 +36,115 @@ class ApiClient extends GetConnect implements GetxService {
     if (!await _checkInternetOrReturnError()) {
       return const Response(statusCode: 0, statusText: "No internet connection");
     }
+
+    final fullUrl = baseUrl! + uri;
+    log('GET Request: $fullUrl');
+    log('Headers: ${headers ?? _mainHeaders}');
+
     try {
-      Response response = await get(Uri.encodeFull(uri), headers: headers ?? _mainHeaders);
+      final response = await get(uri, headers: headers ?? _mainHeaders);
+      _logResponse('GET', response);
       return _handleResponseStatus(response);
     } catch (e) {
+      _logError('GET', fullUrl, e);
       return Response(statusCode: 1, statusText: e.toString());
     }
   }
-
 
   Future<Response> postData(String uri, dynamic body) async {
     if (!await _checkInternetOrReturnError()) {
       return const Response(statusCode: 0, statusText: "No internet connection");
     }
 
+    final fullUrl = baseUrl! + uri;
+    log('POST Request: $fullUrl');
+    log('Request Body: ${jsonEncode(body)}');
+    log('Headers: $_mainHeaders');
+
     try {
-      Response response = await post(uri, jsonEncode(body), headers: _mainHeaders);
+      final response = await post(uri, jsonEncode(body), headers: _mainHeaders);
+      _logResponse('POST', response);
       return _handleResponseStatus(response);
     } catch (e) {
+      _logError('POST', fullUrl, e);
       return Response(statusCode: 1, statusText: e.toString());
     }
   }
-
 
   Future<Response> putData(String uri, dynamic body) async {
     if (!await _checkInternetOrReturnError()) {
-      return const Response(statusCode: 0, statusText: "No internet connection! \nPlease check your internet first.");
+      return const Response(statusCode: 0, statusText: "No internet connection");
     }
 
+    final fullUrl = baseUrl! + uri;
+    log('PUT Request: $fullUrl');
+    log('Request Body: ${jsonEncode(body)}');
+    log('Headers: $_mainHeaders');
+
     try {
-      Response response = await put(uri, jsonEncode(body), headers: _mainHeaders);
+      final response = await put(uri, jsonEncode(body), headers: _mainHeaders);
+      _logResponse('PUT', response);
       return _handleResponseStatus(response);
     } catch (e) {
+      _logError('PUT', fullUrl, e);
       return Response(statusCode: 1, statusText: e.toString());
     }
   }
 
-  Future<Map<String, dynamic>> uploadFileWithDio(
-      String uri, File file, String fileName) async {
-    Map<String, dynamic> map = {};
-
+  Future<Map<String, dynamic>> uploadFile(
+      String uri,
+      File file,
+      String fileName,
+      ) async {
     if (!await _checkInternetOrReturnError()) {
-      throw 'No internet connection';
+      throw Exception('No internet connection');
     }
 
+    final fullUrl = baseUrl! + uri;
     try {
-
-      String completeUrl = '$baseUrl$uri';
-
-      final request = dio.Dio();
-      final formData = dio.FormData.fromMap({
-        "image": await dio.MultipartFile.fromFile(
-          file.path,
-          filename: fileName,
-          //contentType: MediaType('application', 'pdf'),
-        ),
+      final formData = FormData({
+        'image': MultipartFile(file, filename: fileName),
       });
 
-      final response = await request.postUri(
-        Uri.parse(
-          completeUrl,
-        ),
-        data: formData,
-        options: dio.Options(
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            HttpHeaders.contentTypeHeader: 'multipart/form-data; charset=UTF-8',
-            HttpHeaders.contentLengthHeader: formData.length,
-          },
-        ),
-      );
-      _handleResponseStatus(Response(
-        statusCode: response.statusCode,
-        statusText: response.statusMessage,
-      ));
+      log('UPLOAD Request: $fullUrl');
+      log('Uploading file: ${file.path}');
+      log('Headers: $_mainHeaders');
 
-      map = response.data;
-      return map;
-    } on dio.DioException {
-      throw 'Something Went Wrong';
-    } catch (error) {
-      throw 'Something Went Wrong';
+      final response = await post(uri, formData, headers: _mainHeaders);
+      _logResponse('UPLOAD', response);
+
+      _handleResponseStatus(response);
+      return response.body;
+    } catch (e) {
+      _logError('UPLOAD', fullUrl, e);
+      throw Exception('File upload failed: ${e.toString()}');
     }
   }
 
-  // Method to handle response status
-  dynamic _handleResponseStatus(Response response) {
-    switch (response.statusCode) {
-      case 401:
-        clearSharedData();
-        Get.offAllNamed(AppRoutes.loginScreen);
-        break;
-      default:
-        return response;
+  Response _handleResponseStatus(Response response) {
+    if (response.statusCode == 401) {
+      clearSharedData();
+      Get.offAllNamed(AppRoutes.loginScreen);
     }
+    return response;
   }
 
+  void _logResponse(String method, Response response) {
+    log('$method Response (${response.statusCode}):');
+    log('Headers: ${response.headers}');
+    log('Body: ${response.bodyString}');
+  }
+
+  void _logError(String method, String url, dynamic error) {
+    log('$method Error: $url');
+    log('Error: ${error.toString()}');
+    if (error is dio.DioException) {
+      log('Dio Error: ${error.response?.data}');
+    }
+  }
 
   Future<bool> _checkInternetOrReturnError() async {
-    bool hasInternet = await NetworkConnection.instance.hasInternetConnection();
+    final hasInternet = await NetworkConnection.instance.hasInternetConnection();
     if (!hasInternet) {
       Get.snackbar("No Internet", "Please check your internet connection.");
     }

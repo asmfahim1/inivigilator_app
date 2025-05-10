@@ -41,15 +41,18 @@ class LoginController extends GetxController {
   }
 
   RxBool isExamListLoaded = false.obs;
-  RxList examList = <ExamNameList>[].obs;
+  // Change the RxList type to match your model
+  RxList<ExamDatum> examList = <ExamDatum>[].obs;
+
   Future<void> getAllExams() async {
     try {
-      isExamListLoaded.value = true; // Set loading state to true
+      isExamListLoaded.value = true;
       Response response = await loginRepo!.getAllExams();
 
-      if (response.statusCode == 200) {
-        var list = examNameListFromJson(response.bodyString!);
-        examList.value = list;
+      if (response.statusCode == 200 && response.body != null) {
+        // Use the correct parsing method
+        ExamListModel examListModel = examListModelFromJson(response.bodyString!);
+        examList.value = examListModel.data ?? [];
       } else {
         examList.clear();
       }
@@ -57,7 +60,7 @@ class LoginController extends GetxController {
       DialogUtils.showErrorDialog(description: "$error");
       examList.clear();
     } finally {
-      isExamListLoaded.value = false; // Set loading state to false
+      isExamListLoaded.value = false;
     }
     update();
   }
@@ -70,7 +73,7 @@ class LoginController extends GetxController {
       final Map<String, dynamic> map = <String, dynamic>{};
       map['email'] = email.text.trim();
       map['password'] = password.text.trim();
-      map['exam_id'] = examId.value;
+      // map['exam_id'] = examId.value;
 
       Response response = await loginRepo!.login(map);
 
@@ -90,8 +93,7 @@ class LoginController extends GetxController {
             description: responseModel.message ?? 'no_data'.tr,
           );
         } else {
-          await loginRepo!.saveUserToken(responseModel.token.toString(),
-              responseModel.data!.registretionDone!);
+          await loginRepo!.saveUserToken(responseModel.token.toString());
 
           Get.offAllNamed(AppRoutes.homeScreen);
         }
