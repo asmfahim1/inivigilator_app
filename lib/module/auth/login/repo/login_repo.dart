@@ -18,54 +18,11 @@ class LoginRepo {
     return await apiClient.postData(AppConstants.loginUrl, loginBody);
   }
 
-  // saveUserToken(String token, bool registrationDone) async {
-  //   apiClient.token = token;
-  //   apiClient.updateHeader(token);
-  //
-  //   await sharedPreferences.setString(AppConstantKey.TOKEN.key, token);
-  //   await sharedPreferences.setBool(AppConstantKey.REGISTRATION.key, registrationDone);
-  // }
-
   saveUserToken(String token) async {
     apiClient.token = token;
 
     await sharedPreferences.setString(AppConstantKey.TOKEN.key, token);
   }
-
-  // Future<void> saveUserInfo(Map<String, dynamic> userInfo) async {
-  //   String userInfoString = jsonEncode(userInfo);
-  //   await sharedPreferences.setString('loginBody', userInfoString);
-  // }
-  //
-  // Future<Map<String, dynamic>?> getUserInfo() async {
-  //   String? loginBodyString = sharedPreferences.getString('loginBody');
-  //   if (loginBodyString != null) {
-  //     Map<String, dynamic> loginBody = jsonDecode(loginBodyString);
-  //     return loginBody;
-  //   }
-  //   return null;
-  // }
-
-  // saveUserToken(String token, User user) async {
-  //   apiClient.token = token;
-  //   apiClient.updateHeader(token);
-  //
-  //   //await PrefHelper.setString(AppConstantKey.TOKEN.key, token);
-  //   await sharedPreferences.setString(AppConstantKey.TOKEN.key, token);
-  //
-  //   String userJson = json.encode(user.toJson());
-  //   await sharedPreferences.setString(AppConstantKey.USER_INFO.key, userJson);
-  // }
-
-  // static Future<User?> getUser() async {
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String? userJson = prefs.getString(AppConstantKey.USER_INFO.key);
-  //   if (userJson != null) {
-  //     Map<String, dynamic> userMap = json.decode(userJson);
-  //     return User.fromJson(userMap);
-  //   }
-  //   return null;
-  // }
 
   bool userLoggedIn() {
     // Check if the key exists and the value is true

@@ -34,7 +34,7 @@ class ApiClient extends GetConnect implements GetxService {
 
   Future<Response> getData(String uri, {Map<String, String>? headers}) async {
     if (!await _checkInternetOrReturnError()) {
-      return const Response(statusCode: 0, statusText: "No internet connection");
+      return Response(statusCode: 0, statusText: 'no_internet'.tr);
     }
 
     final fullUrl = baseUrl! + uri;
@@ -45,15 +45,15 @@ class ApiClient extends GetConnect implements GetxService {
       final response = await get(uri, headers: headers ?? _mainHeaders);
       _logResponse('GET', response);
       return _handleResponseStatus(response);
-    } catch (e) {
+    } catch (e, stackTrace) {
       _logError('GET', fullUrl, e);
-      return Response(statusCode: 1, statusText: e.toString());
+      return Response(statusCode: 1, statusText: "${e.toString()} $stackTrace");
     }
   }
 
   Future<Response> postData(String uri, dynamic body) async {
     if (!await _checkInternetOrReturnError()) {
-      return const Response(statusCode: 0, statusText: "No internet connection");
+      return Response(statusCode: 0, statusText: 'no_internet'.tr);
     }
 
     final fullUrl = baseUrl! + uri;
@@ -65,15 +65,15 @@ class ApiClient extends GetConnect implements GetxService {
       final response = await post(uri, jsonEncode(body), headers: _mainHeaders);
       _logResponse('POST', response);
       return _handleResponseStatus(response);
-    } catch (e) {
+    } catch (e, stackTrace) {
       _logError('POST', fullUrl, e);
-      return Response(statusCode: 1, statusText: e.toString());
+      return Response(statusCode: 1, statusText: "${e.toString()} $stackTrace");
     }
   }
 
   Future<Response> putData(String uri, dynamic body) async {
     if (!await _checkInternetOrReturnError()) {
-      return const Response(statusCode: 0, statusText: "No internet connection");
+      return Response(statusCode: 0, statusText: 'no_internet'.tr);
     }
 
     final fullUrl = baseUrl! + uri;
@@ -85,9 +85,33 @@ class ApiClient extends GetConnect implements GetxService {
       final response = await put(uri, jsonEncode(body), headers: _mainHeaders);
       _logResponse('PUT', response);
       return _handleResponseStatus(response);
-    } catch (e) {
+    } catch (e, stackTrace) {
       _logError('PUT', fullUrl, e);
-      return Response(statusCode: 1, statusText: e.toString());
+      return Response(statusCode: 1, statusText: "${e.toString()} $stackTrace");
+    }
+  }
+
+  Future<Response> deleteData(String uri, {dynamic body, Map<String, String>? headers}) async {
+    if (!await _checkInternetOrReturnError()) {
+      return Response(statusCode: 0, statusText: 'no_internet'.tr);
+    }
+
+    final fullUrl = baseUrl! + uri;
+    log('DELETE Request: $fullUrl');
+    log('Request Body: ${jsonEncode(body)}');
+    log('Headers: ${headers ?? _mainHeaders}');
+
+    try {
+      final response = await delete(
+        uri,
+        query: body,
+        headers: headers ?? _mainHeaders,
+      );
+      _logResponse('DELETE', response);
+      return _handleResponseStatus(response);
+    } catch (e, stackTrace) {
+      _logError('DELETE', fullUrl, e);
+      return Response(statusCode: 1, statusText: "$e $stackTrace");
     }
   }
 
@@ -97,7 +121,7 @@ class ApiClient extends GetConnect implements GetxService {
       String fileName,
       ) async {
     if (!await _checkInternetOrReturnError()) {
-      throw Exception('No internet connection');
+      throw Exception('no_internet'.tr);
     }
 
     final fullUrl = baseUrl! + uri;
@@ -115,19 +139,47 @@ class ApiClient extends GetConnect implements GetxService {
 
       _handleResponseStatus(response);
       return response.body;
-    } catch (e) {
+    } catch (e, stackTrace) {
       _logError('UPLOAD', fullUrl, e);
-      throw Exception('File upload failed: ${e.toString()}');
+      throw Exception('File upload failed: ${e.toString()} $stackTrace');
     }
   }
 
   Response _handleResponseStatus(Response response) {
-    if (response.statusCode == 401) {
-      clearSharedData();
-      Get.offAllNamed(AppRoutes.loginScreen);
+    switch (response.statusCode) {
+      case 200:
+      case 201:
+      // Success, allow the response to be returned
+        return response;
+
+      case 400:
+      // Handle bad request
+        log('Bad request: ${response.body}');
+        throw Exception('Bad request');
+
+      case 401:
+        clearSharedData();
+        Get.offAllNamed(AppRoutes.loginScreen);
+        throw Exception('Unauthorized');
+
+      case 403:
+        log('Forbidden access');
+        throw Exception('Forbidden access');
+
+      case 404:
+        log('Resource not found');
+        throw Exception('Resource not found');
+
+      case 500:
+        log('Server error: ${response.body}');
+        throw Exception('Internal server error');
+
+      default:
+        log('Unhandled status code: ${response.statusCode}');
+        throw Exception('Unexpected status code: ${response.statusCode}');
     }
-    return response;
   }
+
 
   void _logResponse(String method, Response response) {
     log('$method Response (${response.statusCode}):');

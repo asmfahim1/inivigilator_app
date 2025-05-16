@@ -37,7 +37,7 @@ class Language extends Translations {
       // homeController
       'attendance' : 'Attended Student',
       'total' : 'Total',
-
+      'no_internet': 'No internet connection',
     },
 
     'bn_BD' : {
@@ -87,7 +87,7 @@ class Language extends Translations {
       'try_again_btn' : 'আবার চেষ্টা করুন',
       'no_image_selected' : 'ডিভাইস থেকে কোনো ছবি নির্বাচন করা হয়নি',
       'wait_for_a_while' : 'কিছুক্ষন অপেক্ষা করুন...',
-
+      'no_internet': 'ইন্টারনেট সংযোগ নেই',
     },
   };
 }
