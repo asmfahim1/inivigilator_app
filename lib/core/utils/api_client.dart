@@ -127,7 +127,7 @@ class ApiClient extends GetConnect implements GetxService {
     final fullUrl = baseUrl! + uri;
     try {
       final formData = FormData({
-        'image': MultipartFile(file, filename: fileName),
+        'image': MultipartFile(file, filename: ''),
       });
 
       log('UPLOAD Request: $fullUrl');
@@ -164,19 +164,23 @@ class ApiClient extends GetConnect implements GetxService {
 
       case 403:
         log('Forbidden access');
-        throw Exception('Forbidden access');
+        return response;
+    // throw Exception('Forbidden access');
 
       case 404:
         log('Resource not found');
-        throw Exception('Resource not found');
+        return response;
+    // throw Exception('Resource not found');
 
       case 500:
         log('Server error: ${response.body}');
-        throw Exception('Internal server error');
+        return response;
+    // throw Exception('Internal server error');
 
       default:
         log('Unhandled status code: ${response.statusCode}');
-        throw Exception('Unexpected status code: ${response.statusCode}');
+        return response;
+    // throw Exception('Unexpected status code: ${response.statusCode}');
     }
   }
 

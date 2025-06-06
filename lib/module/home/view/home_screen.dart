@@ -122,7 +122,9 @@ class HomeScreen extends StatelessWidget {
             return GestureDetector(
               onTap: (){
 
-                Get.toNamed(AppRoutes.studentInfoScreen);
+                Get.toNamed(AppRoutes.studentInfoScreen)?.then((value) {
+
+                });
 
               },
               child: Card(

@@ -24,6 +24,22 @@ class HomeController extends GetxController{
     // TODO: implement onInit
     super.onInit();
     dbHelper.init();
+    getProfileInformation();
+  }
+
+
+  Future<void> getProfileInformation() async {
+    try {
+      final response = await homeRepo!.getAllFaceVectors();
+      if (response.statusCode == 200) {
+        final data = response.body;
+        print('Profile Information: $data');
+      } else {
+        print('Failed to fetch profile information');
+      }
+    } catch (e) {
+      print('Error fetching profile information: $e');
+    }
   }
 
   var students = <Map<String, dynamic>>[].obs;
