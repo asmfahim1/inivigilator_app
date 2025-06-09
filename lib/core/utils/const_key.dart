@@ -1,5 +1,6 @@
 enum AppConstantKey {
   USER_ID,
+  EXAM_ID,
   USER_INFO,
   REGISTRATION,
   TOKEN,
@@ -41,6 +42,8 @@ extension AppConstantExtention on AppConstantKey {
     switch (this) {
       case AppConstantKey.USER_ID:
         return "USER_ID";
+      case AppConstantKey.EXAM_ID:
+        return "EXAM_ID";
       case AppConstantKey.USER_INFO:
         return "USER_INFO";
       case AppConstantKey.REGISTRATION:

@@ -18,16 +18,16 @@ class AttendedStudentsListTile extends StatelessWidget {
           leading: CircleAvatar(
             backgroundColor: const Color(0xff764abc),
             child: TextWidget(
-              student['id'].toString(),
+              student["id"].toString(),
               style: TextStyles.regular14.copyWith(color: whiteColor,),
             ),
           ),
           title: TextWidget(
-            'Name: ${student['name']}',
+            'Name: ${student["name"]}',
             style: TextStyles.title16,
           ),
           subtitle: TextWidget(
-            'Matching distance: ${student['distance'].toStringAsFixed(2)}',
+            "Matching distance: ${student["distance"].toStringAsFixed(2)}",
             style: TextStyles.title16,
           ),
           trailing: const Icon(Icons.check, color: greenColor,),

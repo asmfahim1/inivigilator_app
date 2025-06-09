@@ -24,16 +24,22 @@ class AttendanceListScreen extends StatelessWidget {
         ),
         actions: [
           GestureDetector(
-            onTap: () {},
-            child: Padding(
-              padding: EdgeInsets.only(
-                right: Dimensions.padding10,
-              ),
-              child: Icon(
-                Icons.file_upload_outlined,
-                size: Dimensions.iconSize25,
-              ),
-            ),
+            onTap: homeController.isAttendanceUploaded.value
+                ? null
+                : () {
+                    homeController.uploadPresentStudentData();
+                  },
+            child: homeController.isAttendanceUploaded.value
+                ? const CircularProgressIndicator()
+                : Padding(
+                    padding: EdgeInsets.only(
+                      right: Dimensions.padding10,
+                    ),
+                    child: Icon(
+                      Icons.file_upload_outlined,
+                      size: Dimensions.iconSize25,
+                    ),
+                  ),
           ),
         ],
       ),

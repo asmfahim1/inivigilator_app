@@ -38,6 +38,13 @@ class Language extends Translations {
       'attendance' : 'Attended Student',
       'total' : 'Total',
       'no_internet': 'No internet connection',
+
+      //other
+      'uploading' : 'Uploading ...',
+      'submitting' : 'Submitting report...',
+      'name' : 'Name',
+      'roll' : 'Id No',
+      'exam_name' : 'Exam Name',
     },
 
     'bn_BD' : {
@@ -88,6 +95,11 @@ class Language extends Translations {
       'no_image_selected' : 'ডিভাইস থেকে কোনো ছবি নির্বাচন করা হয়নি',
       'wait_for_a_while' : 'কিছুক্ষন অপেক্ষা করুন...',
       'no_internet': 'ইন্টারনেট সংযোগ নেই',
+
+      //other
+      'name' : 'নাম',
+      'roll' : 'আইডি নং',
+      'exam_name' : 'পরীক্ষার নাম',
     },
   };
 }

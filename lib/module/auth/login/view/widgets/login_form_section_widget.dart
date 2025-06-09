@@ -13,9 +13,7 @@ class LoginFormSectionWidget extends StatelessWidget {
   LoginFormSectionWidget({Key? key}) : super(key: key);
 
   final _formKey = GlobalKey<FormState>();
-
   final FocusNode _passwordFocus = FocusNode();
-
   final LoginController login = Get.find<LoginController>();
 
   @override
@@ -73,7 +71,6 @@ class LoginFormSectionWidget extends StatelessWidget {
                 height: Dimensions.height15 * 2,
               ),
               CommonButton(
-                height: 45,
                 width: Dimensions.screenWidth,
                 buttonColor: blueColor,
                 buttonTitle: 'login'.tr,

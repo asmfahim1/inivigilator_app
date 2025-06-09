@@ -1,15 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:invigilator_app/core/utils/colors.dart';
 import 'package:invigilator_app/core/utils/db_helper.dart';
 import 'package:invigilator_app/core/utils/dialogue_utils.dart';
-import 'package:invigilator_app/core/utils/string_resource.dart';
 import 'package:invigilator_app/core/utils/styles.dart';
 import 'package:invigilator_app/core/widgets/text_widget.dart';
 import 'package:invigilator_app/module/home/model/face_detector_model.dart';
@@ -25,12 +22,28 @@ class HomeController extends GetxController{
     super.onInit();
     dbHelper.init();
     getProfileInformation();
+    getExamWiseRoom();
   }
 
 
   Future<void> getProfileInformation() async {
     try {
       final response = await homeRepo!.getAllFaceVectors();
+      if (response.statusCode == 200) {
+        final data = response.body;
+        print('Profile Information: $data');
+      } else {
+        print('Failed to fetch profile information');
+      }
+    } catch (e) {
+      print('Error fetching profile information: $e');
+    }
+  }
+
+
+  Future<void> getExamWiseRoom() async {
+    try {
+      final response = await homeRepo!.getExamWiseRoomList();
       if (response.statusCode == 200) {
         final data = response.body;
         print('Profile Information: $data');
@@ -216,4 +229,33 @@ class HomeController extends GetxController{
       ],
     ),
   );
+
+
+  RxBool isAttendanceUploaded = false.obs;
+  Future<void> uploadPresentStudentData() async {
+    isAttendanceUploaded(true);
+    try {
+      final List<int> ids = attendedStudents.map((student) => student["id"] as int).toList();
+      final Map<String, dynamic> body = {
+        'ids': ids,
+      };
+
+      final response = await homeRepo!.uploadPresentStudentData(body);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+
+        await dbHelper.clearAttendanceTable();
+        attendedStudents.clear();
+        await fetchPresentStudent();
+
+        Get.snackbar('Success', 'Attendance data uploaded and cleared.');
+      } else {
+        throw Exception('Failed to upload attendance data');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to upload attendance data: $e');
+    } finally {
+      isAttendanceUploaded(false);
+    }
+  }
 }

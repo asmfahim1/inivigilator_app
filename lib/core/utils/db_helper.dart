@@ -124,4 +124,8 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getAllAttendedStudent() async {
     return await _db!.query(attendanceRecordTable);
   }
+
+  Future<int> clearAttendanceTable() async {
+    return await _db!.delete(attendanceRecordTable);
+  }
 }

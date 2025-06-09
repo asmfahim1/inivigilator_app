@@ -41,7 +41,7 @@ class DialogUtils {
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0))),
         child: Padding(
-          padding: allPadding15,
+          padding: EdgeInsets.all(Dimensions.padding15),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -54,7 +54,7 @@ class DialogUtils {
                 description,
                 style: TextStyles.regular14,
               ),
-              ElevatedButton(
+              FilledButton(
                 onPressed: () {
                   if (Get.isDialogOpen!) Get.back();
                 },
@@ -83,4 +83,15 @@ class DialogUtils {
     );
   }
 
+  static void showNoImageTakenWarning(
+      {int seconds = 1, Color bgColor = redColor}) {
+    Get.snackbar(
+      'warning'.tr,
+      'no_image_selected'.tr,
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: redColor,
+      colorText: whiteColor,
+      duration: const Duration(seconds: 2),
+    );
+  }
 }

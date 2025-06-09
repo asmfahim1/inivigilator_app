@@ -8,6 +8,7 @@ import 'package:invigilator_app/module/home/controller/test_controller.dart';
 import 'package:invigilator_app/module/home/controller/unfairness_controller.dart';
 import 'package:invigilator_app/module/home/repo/home_repo.dart';
 import 'package:invigilator_app/module/home/repo/test_repo.dart';
+import 'package:invigilator_app/module/home/repo/unfairness_repo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> init() async {
@@ -37,6 +38,10 @@ Future<void> init() async {
       () => TestRepo(apiClient: Get.find(), sharedPreferences: Get.find()),
       fenix: true);
 
+  Get.lazyPut(
+      () => UnfairnessRepo(apiClient: Get.find(), sharedPreferences: Get.find()),
+      fenix: true);
+
   ///Controller
   //Auth
   Get.lazyPut(() => LoginController(loginRepo: Get.find<LoginRepo>()),
@@ -51,6 +56,6 @@ Future<void> init() async {
       fenix: true);
 
 
-  Get.lazyPut(() => UnfairnessController(),
+  Get.lazyPut(() => UnfairnessController(unfairnessRepo: Get.find<UnfairnessRepo>()),
       fenix: true);
 }

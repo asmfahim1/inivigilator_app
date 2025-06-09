@@ -1,6 +1,7 @@
 import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:invigilator_app/core/utils/api_client.dart';
 import 'package:invigilator_app/core/utils/app_constants.dart';
+import 'package:invigilator_app/core/utils/const_key.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeRepo{
@@ -38,6 +39,17 @@ class HomeRepo{
 
   Future<Response> getAllFaceVectors() async {
     return await apiClient.getData(AppConstants.getFaceVectors);
+  }
+
+
+  Future<Response> uploadPresentStudentData(dynamic apiBody) async {
+    return await apiClient.putData(AppConstants.uploadPresentStudentData, apiBody);
+  }
+
+
+  Future<Response> getExamWiseRoomList() async {
+    String examId = sharedPreferences.getString(AppConstantKey.EXAM_ID.key) ?? '';
+    return await apiClient.getData("${AppConstants.getExamIdWiseRoomList}/$examId");
   }
 
 }
