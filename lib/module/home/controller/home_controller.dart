@@ -9,6 +9,7 @@ import 'package:invigilator_app/core/utils/db_helper.dart';
 import 'package:invigilator_app/core/utils/dialogue_utils.dart';
 import 'package:invigilator_app/core/utils/styles.dart';
 import 'package:invigilator_app/core/widgets/text_widget.dart';
+import 'package:invigilator_app/module/home/model/exam_hall_list_model.dart';
 import 'package:invigilator_app/module/home/model/face_detector_model.dart';
 import 'package:invigilator_app/module/home/repo/home_repo.dart';
 
@@ -22,7 +23,7 @@ class HomeController extends GetxController{
     super.onInit();
     dbHelper.init();
     getProfileInformation();
-    getExamWiseRoom();
+    getExamWiseRoom();  
   }
 
 
@@ -41,19 +42,63 @@ class HomeController extends GetxController{
   }
 
 
+  RxBool isRoomLoaded = false.obs;
+  RxList<Room> examRooms = <Room>[].obs;
+  RxList<Exam> allExams = <Exam>[].obs;
+  Rx<Exam?> todayExam = Rx<Exam?>(null);
+
   Future<void> getExamWiseRoom() async {
+    isRoomLoaded(true);
     try {
       final response = await homeRepo!.getExamWiseRoomList();
       if (response.statusCode == 200) {
         final data = response.body;
-        print('Profile Information: $data');
+
+        List<Exam> exams = (data as List)
+            .map((e) => Exam.fromJson(e))
+            .toList();
+
+        // Filter one exam for today
+        DateTime today = DateTime.now();
+        Exam? examToday = exams.firstWhereOrNull((exam) {
+          final examDate = DateTime.tryParse(exam.examDate ?? '');
+          if (examDate == null) return false;
+          return examDate.year == today.year &&
+              examDate.month == today.month &&
+              examDate.day == today.day;
+        });
+
+        todayExam.value = examToday;
+
+        // Load rooms from that exam only
+        examRooms.value = examToday?.rooms ?? [];
       } else {
-        print('Failed to fetch profile information');
+        print('Failed to fetch exam rooms');
       }
     } catch (e) {
-      print('Error fetching profile information: $e');
+      print('Error fetching exam rooms: $e');
+    } finally {
+      isRoomLoaded(false);
     }
   }
+
+
+  List<Exam> filterTodayExams(List<Exam> exams) {
+    DateTime today = DateTime.now();
+    return exams.where((exam) {
+      final examDate = DateTime.tryParse(exam.examDate ?? '');
+      if (examDate == null) return false;
+      return examDate.year == today.year &&
+          examDate.month == today.month &&
+          examDate.day == today.day;
+    }).toList();
+  }
+
+  List<Room> getTodayRooms(List<Exam> exams) {
+    return filterTodayExams(exams).expand((exam) => exam.rooms ?? <Room>[]).toList();
+  }
+
+
 
   var students = <Map<String, dynamic>>[].obs;
   final DatabaseHelper dbHelper = DatabaseHelper();

@@ -105,27 +105,41 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _examRooms(){
-    return Padding(
-      padding: EdgeInsets.all(Dimensions.padding10),
-      child: GridView.builder(
-          gridDelegate:
-          const SliverGridDelegateWithFixedCrossAxisCount(
+  Widget _examRooms() {
+    return Obx(() {
+      if (homeController.isRoomLoaded.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      if (homeController.examRooms.isEmpty) {
+        return const Center(child: Text("No rooms available today"));
+      }
+
+      return Padding(
+        padding: EdgeInsets.all(Dimensions.padding10),
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             mainAxisSpacing: 10,
             crossAxisSpacing: 10,
             childAspectRatio: 1.5,
           ),
           physics: const BouncingScrollPhysics(),
-          itemCount: 5,
+          itemCount: homeController.examRooms.length,
           itemBuilder: (context, index) {
+            final room = homeController.examRooms[index];
+            final examId = homeController.todayExam.value?.id ?? 0;
+
             return GestureDetector(
-              onTap: (){
-
-                Get.toNamed(AppRoutes.studentInfoScreen)?.then((value) {
-
-                });
-
+              onTap: () {
+                // Pass examId and roomId as arguments
+                Get.toNamed(
+                  AppRoutes.studentInfoScreen,
+                  arguments: {
+                    'examId': examId,
+                    'roomId': room.roomId,
+                  },
+                );
               },
               child: Card(
                 shape: RoundedRectangleBorder(
@@ -136,14 +150,30 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextWidget('Building ${index + 1} ', style: TextStyles.regular14.copyWith(color: Colors.white, fontWeight: FontWeight.bold),),
-                    TextWidget('Room-50${index + 1}', style: TextStyles.regular12.copyWith(color: Colors.white),),
-                    TextWidget('Total Student-3$index', style: TextStyles.regular12.copyWith(color: Colors.white),),
+                    TextWidget(
+                      'Room: ${room.roomNo ?? 'N/A'}',
+                      style: TextStyles.regular14.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    TextWidget(
+                      'Capacity: ${room.capacity ?? 'N/A'}',
+                      style: TextStyles.regular12.copyWith(color: Colors.white),
+                    ),
+                    TextWidget(
+                      'Hall: ${room.hall?.name ?? 'N/A'}',
+                      style: TextStyles.regular12.copyWith(color: Colors.white),
+                    ),
                   ],
                 ),
               ),
             );
-          }),
-    );
+          },
+        ),
+      );
+    });
   }
+
+
 }

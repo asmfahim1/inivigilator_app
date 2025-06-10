@@ -9,7 +9,11 @@ import 'package:invigilator_app/module/home/view/report_submit_screen.dart';
 import 'package:invigilator_app/module/home/view/widgets/candidate_info_list_tile_widget.dart';
 
 class StudentsInfo extends StatelessWidget {
-  StudentsInfo({Key? key}) : super(key: key);
+  final int examId;
+  final int roomId;
+
+  StudentsInfo({Key? key, required this.examId, required this.roomId})
+      : super(key: key);
 
   final homeController = Get.find<HomeController>();
 

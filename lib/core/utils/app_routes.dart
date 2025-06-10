@@ -1,5 +1,4 @@
-import 'package:get/get_navigation/src/routes/get_route.dart';
-import 'package:get/get_navigation/src/routes/transitions_type.dart';
+import 'package:get/get.dart';
 import 'package:invigilator_app/module/home/view/list_of_students_screen.dart';
 import 'package:invigilator_app/module/home/view/present_student_list.dart';
 import 'package:invigilator_app/module/home/view/recognition_screen.dart';
@@ -26,12 +25,12 @@ class AppRoutes {
     GetPage(
       name: splashScreen,
       transition: Transition.cupertino,
-      page: () => SplashScreen(),
+      page: () => const SplashScreen(),
     ),
     GetPage(
       name: getStartedScreen,
       transition: Transition.cupertino,
-      page: () => GetStartedScreen(),
+      page: () => const GetStartedScreen(),
     ),
     GetPage(
       name: loginScreen,
@@ -46,7 +45,14 @@ class AppRoutes {
     GetPage(
       name: studentInfoScreen,
       transition: Transition.noTransition,
-      page: () => StudentsInfo(),
+      page: () {
+        final int examId = Get.arguments['examId'];
+        final int roomId = Get.arguments['roomId'];
+        return StudentsInfo(
+          examId: examId,
+          roomId: roomId,
+        );
+      },
     ),
     GetPage(
       name: recognitionScreen,
