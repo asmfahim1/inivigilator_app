@@ -1,6 +1,6 @@
 class AppConstants {
 
-  static String get baseUrl => "http://192.168.0.105:8000/v1/";
+  static String get baseUrl => "http://192.168.0.103:8000/v1/";
   //static String get baseUrl => 'http://localhost:8000/v1/';
   //static String get baseUrl => 'http://restapi.adequateshop.com/api/';
 

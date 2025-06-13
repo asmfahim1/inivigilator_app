@@ -74,3 +74,29 @@ class Hall {
     'location': location,
   };
 }
+
+
+/*{
+"ok": true,
+"message": "susccess",
+"data": [
+{
+"id": 10,
+"examDate": "2025-06-08",
+"examStart": "10:00 AM",
+"examEnd": "12:00 PM",
+"rooms": [
+{
+"roomId": 3,
+"roomNo": "C201",
+"capacity": 40,
+"hall": {
+"id": 1,
+"name": "Main Hall",
+"location": "Building A"
+}
+}
+]
+}
+]
+}*/

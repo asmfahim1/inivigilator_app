@@ -127,21 +127,28 @@ class ApiClient extends GetConnect implements GetxService {
     final fullUrl = baseUrl! + uri;
     try {
       final formData = FormData({
-        'image': MultipartFile(file, filename: ''),
+        'image': MultipartFile(file, filename: fileName),
       });
 
       log('UPLOAD Request: $fullUrl');
       log('Uploading file: ${file.path}');
-      log('Headers: $_mainHeaders');
+      log('Headers: ${"Authorization : Bearer $token"}');
 
-      final response = await post(uri, formData, headers: _mainHeaders);
+      final response = await post(
+          uri,
+          formData,
+          headers: {
+            'Authorization': 'Bearer $token',
+          }
+      );
       _logResponse('UPLOAD', response);
 
       _handleResponseStatus(response);
       return response.body;
     } catch (e, stackTrace) {
       _logError('UPLOAD', fullUrl, e);
-      throw Exception('File upload failed: ${e.toString()} $stackTrace');
+      log('Stack trace: $stackTrace');
+      throw Exception('File upload failed: ${e.toString()}');
     }
   }
 

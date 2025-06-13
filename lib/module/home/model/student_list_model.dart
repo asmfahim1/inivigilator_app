@@ -41,3 +41,29 @@ class StudentModel {
     };
   }
 }
+
+
+/*
+{
+"ok": true,
+"message": "susccess",
+"data": [
+{
+"id": 101,
+"studentId": 1,
+"rollNo": "A1001",
+"registerNo": "REG2025-01",
+"seat_done": true,
+"attendece_done": true,
+"proxy_attendece": false,
+"student": {
+"id": 1,
+"name": "Rahim Uddin",
+"email": "rahim@example.com",
+"photo_path": [],
+"studentsFaceVector": []
+}
+}
+]
+}
+*/

@@ -21,9 +21,7 @@ Future<void> init() async {
 
   // api client
   Get.lazyPut(
-      () => ApiClient(
-          appBaseUrl: AppConstants.baseUrl, sharedPreferences: Get.find()),
-      fenix: true);
+      () => ApiClient(appBaseUrl: AppConstants.baseUrl, sharedPreferences: Get.find()), fenix: true);
 
   ///Repo
   Get.lazyPut(
