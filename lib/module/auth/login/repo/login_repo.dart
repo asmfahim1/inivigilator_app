@@ -20,8 +20,13 @@ class LoginRepo {
 
   saveUserToken(String token) async {
     apiClient.token = token;
+    apiClient.updateHeader(token);
 
     await sharedPreferences.setString(AppConstantKey.TOKEN.key, token);
+  }
+
+  saveExamId(String examId) async {
+    await sharedPreferences.setString(AppConstantKey.EXAM_ID.key, examId);
   }
 
   bool userLoggedIn() {
@@ -43,6 +48,7 @@ class LoginRepo {
   bool clearSharedData() {
     // PrefHelper.logout();
     sharedPreferences.remove(AppConstantKey.TOKEN.key);
+    sharedPreferences.remove(AppConstantKey.EXAM_ID.key);
     sharedPreferences.remove(AppConstantKey.REGISTRATION.key);
     apiClient.token = '';
     apiClient.updateHeader('');

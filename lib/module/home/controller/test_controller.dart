@@ -58,13 +58,11 @@ class TestController extends GetxController {
   Future<void> initializeCamera() async {
     try {
       cameras = await availableCameras();
-      description = cameras.firstWhere(
-          (camera) => camera.lensDirection == camDirec.value,
-          orElse: () => cameras.first);
+      description = cameras.firstWhere((camera) => camera.lensDirection == camDirec.value, orElse: () => cameras.first);
       controller = CameraController(
         description,
         ResolutionPreset.high,
-        imageFormatGroup: ImageFormatGroup.nv21,
+        imageFormatGroup: ImageFormatGroup.yuv420,
       );
 
       await controller!.initialize();

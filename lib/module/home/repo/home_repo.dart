@@ -49,7 +49,7 @@ class HomeRepo{
 
   Future<Response> getExamWiseRoomList() async {
     String examId = sharedPreferences.getString(AppConstantKey.EXAM_ID.key) ?? '';
-    return await apiClient.getData("${AppConstants.getExamIdWiseRoomList}/$examId");
+    return await apiClient.getData("${AppConstants.getExamIdWiseRoomList}$examId");
   }
 
 }

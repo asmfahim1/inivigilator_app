@@ -22,7 +22,7 @@ class HomeController extends GetxController{
     // TODO: implement onInit
     super.onInit();
     dbHelper.init();
-    getProfileInformation();
+    // getProfileInformation();
     getExamWiseRoom();  
   }
 
@@ -44,25 +44,28 @@ class HomeController extends GetxController{
 
   RxBool isRoomLoaded = false.obs;
   RxList<Room> examRooms = <Room>[].obs;
-  RxList<Exam> allExams = <Exam>[].obs;
-  Rx<Exam?> todayExam = Rx<Exam?>(null);
+  RxList<ExamData> allExams = <ExamData>[].obs;
+  Rx<ExamData?> todayExam = Rx<ExamData?>(null);
 
   Future<void> getExamWiseRoom() async {
     isRoomLoaded(true);
     try {
+      HallListModel hallListModel;
       final response = await homeRepo!.getExamWiseRoomList();
+
       if (response.statusCode == 200) {
-        final data = response.body;
+        hallListModel = HallListModel.fromJson(response.body);
+        List<ExamData> exams = hallListModel.data!;
+        allExams.value = exams;
 
-        List<Exam> exams = (data as List)
-            .map((e) => Exam.fromJson(e))
-            .toList();
-
-        // Filter one exam for today
+        // Filter today's exam
         DateTime today = DateTime.now();
-        Exam? examToday = exams.firstWhereOrNull((exam) {
-          final examDate = DateTime.tryParse(exam.examDate ?? '');
+        ExamData? examToday = exams.firstWhereOrNull((exam) {
+          if (exam.examDate == null) return false;
+
+          DateTime? examDate = DateTime.tryParse(exam.examDate!);
           if (examDate == null) return false;
+
           return examDate.year == today.year &&
               examDate.month == today.month &&
               examDate.day == today.day;
@@ -70,8 +73,12 @@ class HomeController extends GetxController{
 
         todayExam.value = examToday;
 
-        // Load rooms from that exam only
-        examRooms.value = examToday?.rooms ?? [];
+        print("=====Today Exam==$todayExam");
+
+        // Load today's rooms
+        examRooms.value = allExams.first.rooms ?? [];
+        print("=====Today Exam==$examRooms");
+
       } else {
         print('Failed to fetch exam rooms');
       }
@@ -81,23 +88,6 @@ class HomeController extends GetxController{
       isRoomLoaded(false);
     }
   }
-
-
-  List<Exam> filterTodayExams(List<Exam> exams) {
-    DateTime today = DateTime.now();
-    return exams.where((exam) {
-      final examDate = DateTime.tryParse(exam.examDate ?? '');
-      if (examDate == null) return false;
-      return examDate.year == today.year &&
-          examDate.month == today.month &&
-          examDate.day == today.day;
-    }).toList();
-  }
-
-  List<Room> getTodayRooms(List<Exam> exams) {
-    return filterTodayExams(exams).expand((exam) => exam.rooms ?? <Room>[]).toList();
-  }
-
 
 
   var students = <Map<String, dynamic>>[].obs;

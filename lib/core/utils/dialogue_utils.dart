@@ -69,7 +69,7 @@ class DialogUtils {
   }
 
   static void showSnackBar(String messageTitle, String messageBody,
-      {int seconds = 1, Color bgColor = redColor}) {
+      {int seconds = 2, Color bgColor = redColor}) {
     Get.snackbar(
       messageTitle,
       messageBody,

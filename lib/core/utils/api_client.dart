@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:invigilator_app/core/utils/app_routes.dart';
 import 'package:invigilator_app/core/utils/const_key.dart';
+import 'package:invigilator_app/core/utils/dialogue_utils.dart';
 import 'package:invigilator_app/core/utils/network_connectivity_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
@@ -165,6 +166,10 @@ class ApiClient extends GetConnect implements GetxService {
         throw Exception('Bad request');
 
       case 401:
+        DialogUtils.showSnackBar(
+          'warning'.tr,
+          response.body["error"] ?? 'error_unknown'.tr,
+        );
         clearSharedData();
         Get.offAllNamed(AppRoutes.loginScreen);
         throw Exception('Unauthorized');
@@ -216,6 +221,7 @@ class ApiClient extends GetConnect implements GetxService {
 
   bool clearSharedData() {
     sharedPreferences.remove(AppConstantKey.TOKEN.key);
+    sharedPreferences.remove(AppConstantKey.EXAM_ID.key);
     token = '';
     updateHeader('');
     return true;

@@ -73,7 +73,7 @@ class LoginController extends GetxController {
       final Map<String, dynamic> map = <String, dynamic>{};
       map['email'] = email.text.trim();
       map['password'] = password.text.trim();
-      // map['exam_id'] = examId.value;
+      map['exam_id'] = examId.value;
 
       Response response = await loginRepo!.login(map);
 
@@ -94,6 +94,10 @@ class LoginController extends GetxController {
           );
         } else {
           await loginRepo!.saveUserToken(responseModel.token.toString());
+          await loginRepo!.saveExamId(examId.value.toString());
+
+          final String token = await loginRepo!.getUserToken();
+          print("Token : ${token}\nExamId : ${examId.value.toString()}");
 
           Get.offAllNamed(AppRoutes.homeScreen);
         }
