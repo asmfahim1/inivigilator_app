@@ -138,6 +138,40 @@ class Recognizer {
         distance += diff * diff;
       }
       distance = sqrt(distance);
+
+
+      if (pair.distance == -5 || distance < pair.distance) {
+        pair.distance = distance;
+        pair.name = name;
+        pair.id = id;
+      }
+
+      print("Name: $name, ID: $id, Match: $distance");
+
+
+    }
+
+    print("Actual Pair distance is : ${pair.distance} and name is ${pair.name}");
+    return pair;
+  }
+
+  //TODO  looks for the nearest embeeding in the database and returns the pair which contain information of registered face with which face is most similar
+  /*
+  findNearest(List<double> emb) {
+    Pair pair = Pair(0, "Unknown", -5);
+    for (MapEntry<String, RecognitionV2> item in registered.entries) {
+
+      // print('registered faces---------------------------------------- ${registered.length}\n');
+
+      final String name = item.key;
+      final int id = item.value.studentId;
+      List<double> knownEmb = item.value.embeddings;
+      double distance = 0;
+      for (int i = 0; i < emb.length; i++) {
+        double diff = emb[i] - knownEmb[i];
+        distance += diff * diff;
+      }
+      distance = sqrt(distance);
       if (kDebugMode) {
         print('---Distance is : $distance Name : $name');
       }
@@ -151,9 +185,7 @@ class Recognizer {
     }
     return pair;
   }
-
-  //TODO  looks for the nearest embeeding in the database and returns the pair which contain information of registered face with which face is most similar
-  /*
+  ===================================================================================================
   findNearest(List<double> emb) {
     Pair pair = Pair(0, "Unknown", -5);
     for (MapEntry<String, RecognitionV2> item in registered.entries) {
@@ -185,9 +217,7 @@ class Recognizer {
     print("Actual Pair distance is : ${pair.distance} and name is ${pair.name}");
     return pair;
   }
-
-   */
-
+  */
 
 
   /*
