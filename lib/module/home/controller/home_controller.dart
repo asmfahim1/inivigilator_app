@@ -96,15 +96,27 @@ class HomeController extends GetxController{
 
   Future<void> fetchStudents() async {
     try {
-      final data = await dbHelper.getStudents();
-      students.value = data;
-      print('Students list : ${students.length}');
+      final data = await dbHelper.getUniqueStudents();
 
+      // Parsing names while loading
+      final parsedStudents = data.map((row) {
+        String fullName = row[DatabaseHelper.student_name];
+        String onlyName = fullName.split("_")[0];
 
+        return {
+          'student_id': row[DatabaseHelper.studentId],
+          'student_name': onlyName,
+        };
+      }).toList();
+
+      students.value = parsedStudents;
+      print('Unique Students list : ${students.length}');
     } catch (e) {
       print("Error fetching students: $e");
     }
   }
+
+
 
   RxBool isStudentFetched = false.obs;
   Future<void> insertStudents() async {

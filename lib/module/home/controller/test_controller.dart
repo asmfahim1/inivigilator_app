@@ -162,7 +162,7 @@ class TestController extends GetxController {
 
       RecognitionV2 recognition = recognizer.recognize(croppedFace, faceRect);
 
-      if (recognition.distance <= 1 && recognition.name != 'Unknown') {
+      if (recognition.distance <= 1 && recognition.studentName != 'Unknown') {
         isDialogueOpen.value = true;
         // await stopCamera();
         showFaceRecognitionDialog(recognition);
@@ -234,7 +234,7 @@ class TestController extends GetxController {
       title: "Face Recognized",
       content: Column(
         children: [
-          Text("Name: ${recognition.name}"),
+          Text("Name: ${recognition.studentName.split("_")[0]}"),
           Text("Distance: ${recognition.distance.toStringAsFixed(2)}"),
         ],
       ),
@@ -253,11 +253,12 @@ class TestController extends GetxController {
 
   //db insertion and
   Future<void> insertAttendanceRecord(RecognitionV2 recognition) async {
-    bool nameExists = await dbHelper.isNameAlreadyPresent(recognition.name);
+    bool nameExists = await dbHelper.isNameAlreadyPresent(recognition.studentName, recognition.studentId);
     if (!nameExists) {
       // Insert data into attendance table
       Map<String, dynamic> record = {
-        'name': recognition.name,
+        'student_id': recognition.studentId,
+        'student_name': recognition.studentName,
         'distance': recognition.distance,
         'timestamp': DateTime.now().toString(),
       };

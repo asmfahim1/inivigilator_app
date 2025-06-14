@@ -142,7 +142,7 @@ class Recognition512 {
     Pair pair = Pair(0, "Unknown", -5);
     for (MapEntry<String, RecognitionV2> item in registered.entries) {
       final String name = item.key;
-      final int id = item.value.id;
+      final int id = item.value.studentId;
       List<double> knownEmb = item.value.embeddings;
       double distance = 0;
       for (int i = 0; i < emb.length; i++) {

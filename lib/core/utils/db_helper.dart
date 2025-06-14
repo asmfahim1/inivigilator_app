@@ -59,8 +59,9 @@ class DatabaseHelper {
     ''');
     await db.execute('''
       CREATE TABLE $attendanceRecordTable (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
+        $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+        $studentId INTEGER,
+        $student_name TEXT,
         distance REAL,
         timestamp TEXT
       )
@@ -78,6 +79,14 @@ class DatabaseHelper {
 
   Future<List<Map<String, dynamic>>> getStudents() async {
     return await _db!.query(tableName);
+  }
+
+  // unique students
+  Future<List<Map<String, dynamic>>> getUniqueStudents() async {
+    return await _db!.rawQuery('''
+    SELECT DISTINCT $studentId, $student_name 
+    FROM $tableName
+  ''');
   }
 
   Future<int> clearDatabase() async {
@@ -103,11 +112,11 @@ class DatabaseHelper {
   }
 
 
-  Future<bool> isNameAlreadyPresent(String name) async {
+  Future<bool> isNameAlreadyPresent(String name, int studentId) async {
     var result = await _db!.query(
       attendanceRecordTable,
-      where: 'name = ?',
-      whereArgs: [name],
+      where: 'name = ? AND studentId = ?',
+      whereArgs: [name, studentId],
     );
     return result.isNotEmpty;
   }
