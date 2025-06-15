@@ -45,6 +45,7 @@ class Language extends Translations {
       'name' : 'Name',
       'roll' : 'Id No',
       'exam_name' : 'Exam Name',
+      'upload_photo' : 'Tap to upload photo',
     },
 
     'bn_BD' : {
@@ -100,6 +101,7 @@ class Language extends Translations {
       'name' : 'নাম',
       'roll' : 'আইডি নং',
       'exam_name' : 'পরীক্ষার নাম',
+      'upload_photo' : 'ছবি আপলোড করতে ট্যাপ করুন',
     },
   };
 }

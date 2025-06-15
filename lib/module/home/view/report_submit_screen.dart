@@ -58,9 +58,9 @@ class ReportCheatingScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: report.imageFile.value == null
-                                  ? const Center(
+                                  ? Center(
                                       child: Text(
-                                        'Tap to upload photo',
+                                        'upload_photo'.tr,
                                       ),
                                     )
                                   : Image.file(
@@ -148,3 +148,5 @@ class ReportCheatingScreen extends StatelessWidget {
     );
   }
 }
+
+
